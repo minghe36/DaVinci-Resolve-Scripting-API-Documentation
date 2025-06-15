@@ -1,0 +1,15 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "达芬奇插件开发API",
+  "description": "达芬奇插件开发API文档",
+  "folders": [],
+  "excludeFolders": ["src"],
+  "excludeFiles": [],
+  "rules": [],
+  "previousVersions": [
+    {
+      "tag": "v20.0.0",
+      "title": "version 20.0.0"
+    }
+  ]
+}
