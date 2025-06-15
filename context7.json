@@ -1,7 +1,7 @@
 {
   "$schema": "https://context7.com/schema/context7.json",
-  "projectTitle": "达芬奇插件开发API",
-  "description": "达芬奇插件开发API文档",
+  "projectTitle": "DaVinci Resolve Scripting API",
+  "description": "DaVinci Resolve Scripting APIDocumentation，达芬奇插件开发API文档",
   "folders": [],
   "excludeFolders": ["src"],
   "excludeFiles": [],
