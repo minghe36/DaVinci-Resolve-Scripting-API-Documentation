@@ -1,5 +1,4 @@
 # README
-
 ## Introduction
 
 This gist is a public online upload of the Resolve Scripting API Documentation file. New functions and modifications for each Resolve update are visible via [git revisions](https://gist.github.com/X-Raym/2f2bf453fc481b9cca624d7ca0e19de8/revisions) feature.
