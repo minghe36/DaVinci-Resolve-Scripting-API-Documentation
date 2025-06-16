@@ -1,0 +1,2765 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <!-- https://stackoverflow.com/questions/44679794/position-fixed-on-chrome-mobile-causing-element-to-move-on-scroll-up-down-->
+  <!--<meta name="viewport" content="height=device-height, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi">-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Fomatted DaVinci Resolve Scripting API documentation.">
+  <meta name="author" content="X-Raym">
+
+  <!-- Og Metas -->
+  <meta property="og:title" content="DaVinci Resolve Scripting API Documentation - by X-Raym">
+  <meta property="og:site_name" content="ExtremRaym">
+  <meta property="og:url" content="https://www.extremraym.com">
+  <meta property="og:description" content="Searchable and easy-to-read list of REAPER ReaScript API functions with common extensions support.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://www.extremraym.com/cloud/resolve-scripting-doc/xr-resolve-script-doc-ogimage.png">
+
+  <link rel="icon" type="image/x-icon" href="DaVinci_Resolve_Studio.png">
+
+  <title>DaVinci Resolve Scripting API — Documentation</title>
+
+  <!-- CSS -->
+  <!--<link href="css/styles.css" rel="stylesheet">-->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+  >
+  <style>
+
+body {
+  display: flex;
+  padding: 0;
+  margin: 0;
+}
+
+aside, main {
+  padding-top: 2em!important;
+}
+
+aside {
+  width: 420px;
+  min-width: 420px;
+  overflow-y: scroll;
+  height: 100vh;
+  position: sticky;
+  top: 0px;
+  padding: 1em;
+  font-size: 0.9em;
+}
+
+aside ul li {
+  padding: unset;
+  display: list-item;
+}
+
+main {
+  min-width: 400px;
+  padding-left: 3em;
+  padding-right: 3em;
+}
+
+th {
+  border-bottom: unset;
+}
+
+ul ul {
+  margin-bottom: unset;
+}
+
+ul ul li {
+  list-style-type: disc;
+}
+
+main p:nth-of-type(3) {
+  padding: 1em;
+}
+
+main p:nth-of-type(3) a {
+  color: black;
+  text-decoration-color: black;
+}
+
+main p:nth-of-type(3) {
+  background-color: #dddd66;
+  color: black;
+}
+
+@media (prefers-color-scheme: dark) {
+  table tr:nth-child(odd) td {
+    background: #252525;
+  }
+
+  table tr:nth-child(even) td {
+    background: #191919;
+  }
+
+  aside {
+    background-color: #0d0d0d;
+  }
+
+  code, pre {
+    background: #0d0d0d;
+    color: #4fee4f;
+  }
+
+  th {
+    background: #111;
+    border-bottom: unset;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+
+}
+  </style>
+
+</head>
+
+<body id="body">
+
+  <aside>
+<h2>Table of Contents</h2>
+<ul>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#using-a-script">Using a script</a></li>
+<li><a href="#running-davinci-resolve-in-headless-mode">Running DaVinci Resolve in headless mode</a></li>
+<li><a href="#davinci-resolve-api">DaVinci Resolve API</a><ul>
+<li><a href="#resolve">Resolve</a></li>
+<li><a href="#projectmanager">ProjectManager</a></li>
+<li><a href="#project">Project</a></li>
+<li><a href="#mediastorage">MediaStorage</a></li>
+<li><a href="#mediapool">MediaPool</a></li>
+<li><a href="#folder">Folder</a></li>
+<li><a href="#mediapoolitem">MediaPoolItem</a></li>
+<li><a href="#timeline">Timeline</a></li>
+<li><a href="#timelineitem">TimelineItem</a></li>
+<li><a href="#gallery">Gallery</a></li>
+<li><a href="#gallerystillalbum">GalleryStillAlbum</a></li>
+<li><a href="#gallerystill">GalleryStill</a></li>
+<li><a href="#graph">Graph</a></li>
+<li><a href="#colorgroup">ColorGroup</a></li>
+</ul>
+</li>
+<li><a href="#list-and-dict-data-structures">List and Dict Data Structures</a></li>
+<li><a href="#keyframe-mode-information">Keyframe Mode information</a></li>
+<li><a href="#cache-mode-information">Cache Mode information</a></li>
+<li><a href="#cloud-projects-settings">Cloud Projects Settings</a></li>
+<li><a href="#audio-sync-settings">Audio Sync Settings</a></li>
+<li><a href="#looking-up-project-and-clip-properties">Looking up Project and Clip properties</a></li>
+<li><a href="#audio-mapping">Audio Mapping</a></li>
+<li><a href="#auto-caption-settings">Auto Caption Settings</a></li>
+<li><a href="#looking-up-render-settings">Looking up Render Settings</a></li>
+<li><a href="#looking-up-timeline-export-properties">Looking up timeline export properties</a></li>
+<li><a href="#unsupported-exporttype-types">Unsupported exportType types</a></li>
+<li><a href="#looking-up-timeline-item-properties">Looking up Timeline item properties</a></li>
+<li><a href="#exportlut-notes">ExportLUT notes</a></li>
+<li><a href="#deprecated-resolve-api-functions">Deprecated Resolve API Functions</a><ul>
+<li><a href="#projectmanager">ProjectManager</a></li>
+<li><a href="#project">Project</a></li>
+<li><a href="#mediastorage">MediaStorage</a></li>
+<li><a href="#folder">Folder</a></li>
+<li><a href="#mediapoolitem">MediaPoolItem</a></li>
+<li><a href="#timeline">Timeline</a></li>
+<li><a href="#timelineitem">TimelineItem</a></li>
+</ul>
+</li>
+<li><a href="#unsupported-resolve-api-functions">Unsupported Resolve API Functions</a><ul>
+<li><a href="#project">Project</a></li>
+</ul>
+</li>
+</ul>
+  </aside>
+
+  <main>
+<p><img alt="DaVinci_Resolve_Studio.png" src="DaVinci_Resolve_Studio.png" /></p>
+<h1>DaVinci Resolve Scripting API - Documentation</h1>
+<p><em>Formatted and Maintained by <a href="https://www.extremraym.com">X-Raym</a> - <a href="https://gist.github.com/X-Raym/2f2bf453fc481b9cca624d7ca0e19de8">Source</a> - <a href="https://www.extremraym.com/resolve-api-doc-release">Release Article</a> - <a href="https://forum.blackmagicdesign.com/viewtopic.php?f=12&amp;t=210618">Forum Thread</a> - <a href="https://github.com/X-Raym/DaVinci-Resolve-Scripts">X-Raym Free Resolve Scripts</a> - <a href="https://www.paypal.me/extremraym/">Donation</a></em> ❤️</p>
+<p><strong>Important:</strong> Without any mention in the v19.1 changelog, <strong>Blackmagic just removed UIManager for the free version of Resolve</strong>, breaking all scripts using UI for free users, including the well-known <a href="https://www.steakunderwater.com/wesuckless/viewtopic.php?t=3067">Reactor</a>. <strong><a href="https://forum.blackmagicdesign.com/viewtopic.php?f=12&amp;t=213158">Please join the discussion about this</a></strong> on <a href="https://forum.blackmagicdesign.com/viewtopic.php?f=12&amp;t=213158">BM Forum</a> to help bring it back!</p>
+<h2 id="last-updated:-7-may-2025">Last Updated: 7 May 2025</h2>
+<p>In this package, you will find a brief introduction to the Scripting API for DaVinci Resolve Studio. Apart from this README.txt file, this package contains folders containing the basic import
+modules for scripting access (DaVinciResolve.py) and some representative examples.</p>
+<p>From v16.2.0 onwards, the nodeIndex parameters accepted by <code>SetLUT()</code> and <code>SetCDL()</code> are 1-based instead of 0-based, i.e. 1 &lt;= nodeIndex &lt;= total number of nodes.</p>
+<h2 id="overview">Overview</h2>
+<p>As with Blackmagic Fusion scripts, user scripts written in Lua and Python programming languages are supported. By default, scripts can be invoked from the Console window in the Fusion page,
+or via command line. This permission can be changed in Resolve Preferences, to be only from Console, or to be invoked from the local network. Please be aware of the security implications when
+allowing scripting access from outside of the Resolve application.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>DaVinci Resolve scripting requires one of the following to be installed (for all users):</p>
+<pre><code>Lua 5.1
+Python &gt;= 3.6 64-bit
+Python 2.7 64-bit
+</code></pre>
+<h2 id="using-a-script">Using a script</h2>
+<p>DaVinci Resolve needs to be running for a script to be invoked.</p>
+<p>For a Resolve script to be executed from an external folder, the script needs to know of the API location.
+You may need to set the these environment variables to allow for your Python installation to pick up the appropriate dependencies as shown below:</p>
+<p><strong>Mac OS X:</strong></p>
+<pre><code>RESOLVE_SCRIPT_API="/Library/Application Support/Blackmagic Design/DaVinci Resolve/Developer/Scripting"
+RESOLVE_SCRIPT_LIB="/Applications/DaVinci Resolve/DaVinci Resolve.app/Contents/Libraries/Fusion/fusionscript.so"
+PYTHONPATH="$PYTHONPATH:$RESOLVE_SCRIPT_API/Modules/"
+</code></pre>
+<p><strong>Windows:</strong></p>
+<pre><code>RESOLVE_SCRIPT_API="%PROGRAMDATA%\Blackmagic Design\DaVinci Resolve\Support\Developer\Scripting"
+RESOLVE_SCRIPT_LIB="C:\Program Files\Blackmagic Design\DaVinci Resolve\fusionscript.dll"
+PYTHONPATH="%PYTHONPATH%;%RESOLVE_SCRIPT_API%\Modules\"
+</code></pre>
+<p><strong>Linux:</strong></p>
+<pre><code>RESOLVE_SCRIPT_API="/opt/resolve/Developer/Scripting"
+RESOLVE_SCRIPT_LIB="/opt/resolve/libs/Fusion/fusionscript.so"
+PYTHONPATH="$PYTHONPATH:$RESOLVE_SCRIPT_API/Modules/"
+(Note: For standard ISO Linux installations, the path above may need to be modified to refer to /home/resolve instead of /opt/resolve)
+</code></pre>
+<p>As with Fusion scripts, Resolve scripts can also be invoked via the menu and the Console.</p>
+<p>On startup, DaVinci Resolve scans the subfolders in the directories shown below and enumerates the scripts found in the Workspace application menu under Scripts.
+Place your script under Utility to be listed in all pages, under Comp or Tool to be available in the Fusion page or under folders for individual pages (Edit, Color or Deliver). Scripts under Deliver are additionally listed under render jobs.
+Placing your script here and invoking it from the menu is the easiest way to use scripts.</p>
+<p><strong>Mac OS X:</strong></p>
+<ul>
+<li>All users: <code>/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Scripts</code></li>
+<li>Specific user: <code>/Users/&lt;UserName&gt;/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Scripts</code></li>
+</ul>
+<p><strong>Windows:</strong></p>
+<ul>
+<li>All users: <code>%PROGRAMDATA%\Blackmagic Design\DaVinci Resolve\Fusion\Scripts</code></li>
+<li>Specific user: <code>%APPDATA%\Roaming\Blackmagic Design\DaVinci Resolve\Support\Fusion\Scripts</code></li>
+</ul>
+<p><strong>Linux:</strong></p>
+<ul>
+<li>All users: <code>/opt/resolve/Fusion/Scripts  (or /home/resolve/Fusion/Scripts/ depending on installation)</code></li>
+<li>Specific user: <code>$HOME/.local/share/DaVinciResolve/Fusion/Scripts</code></li>
+</ul>
+<p>The interactive Console window allows for an easy way to execute simple scripting commands, to query or modify properties, and to test scripts. The console accepts commands in Python 2.7, Python 3.6
+and Lua and evaluates and executes them immediately. For more information on how to use the Console, please refer to the DaVinci Resolve User Manual.</p>
+<p>This example Python script creates a simple project:</p>
+<pre><code>#!/usr/bin/env python
+import DaVinciResolveScript as dvr_script
+resolve = dvr_script.scriptapp("Resolve")
+fusion = resolve.Fusion()
+projectManager = resolve.GetProjectManager()
+projectManager.CreateProject("Hello World")
+</code></pre>
+<p>The resolve object is the fundamental starting point for scripting via Resolve. As a native object, it can be inspected for further scriptable properties - using table iteration and <code>getmetatable</code>
+in Lua and dir, help etc in Python (among other methods). A notable scriptable object above is fusion - it allows access to all existing Fusion scripting functionality.</p>
+<h2 id="running-davinci-resolve-in-headless-mode">Running DaVinci Resolve in headless mode</h2>
+<p>DaVinci Resolve can be launched in a headless mode without the user interface using the -nogui command line option. When DaVinci Resolve is launched using this option, the user interface is disabled.
+However, the various scripting APIs will continue to work as expected.</p>
+<h2 id="davinci-resolve-api">DaVinci Resolve API</h2>
+<p>Some commonly used API functions are described below (*). As with the resolve object, each object is inspectable for properties and functions.</p>
+<h3 id="resolve">Resolve</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Fusion()</code></td>
+<td>Fusion</td>
+<td>Returns the Fusion object. Starting point for Fusion scripts.</td>
+</tr>
+<tr>
+<td><code>GetMediaStorage()</code></td>
+<td>MediaStorage</td>
+<td>Returns the media storage object to query and act on media locations.</td>
+</tr>
+<tr>
+<td><code>GetProjectManager()</code></td>
+<td>ProjectManager</td>
+<td>Returns the project manager object for currently open database.</td>
+</tr>
+<tr>
+<td><code>OpenPage(pageName)</code></td>
+<td>Bool</td>
+<td>Switches to indicated page in DaVinci Resolve. Input can be one of (<code>media</code>, <code>cut</code>, <code>edit</code>, <code>fusion</code>, <code>color</code>, <code>fairlight</code>, <code>deliver</code>).</td>
+</tr>
+<tr>
+<td><code>GetCurrentPage()</code></td>
+<td>String</td>
+<td>Returns the page currently displayed in the main window. Returned value can be one of (<code>media</code>, <code>cut</code>, <code>edit</code>, <code>fusion</code>, <code>color</code>, <code>fairlight</code>, <code>deliver</code>, None).</td>
+</tr>
+<tr>
+<td><code>GetProductName()</code></td>
+<td>string</td>
+<td>Returns product name.</td>
+</tr>
+<tr>
+<td><code>GetVersion()</code></td>
+<td>[version fields]</td>
+<td>Returns list of product version fields in [major, minor, patch, build, suffix] format.</td>
+</tr>
+<tr>
+<td><code>GetVersionString()</code></td>
+<td>string</td>
+<td>Returns product version in "major.minor.patch[suffix].build" format.</td>
+</tr>
+<tr>
+<td><code>LoadLayoutPreset(presetName)</code></td>
+<td>Bool</td>
+<td>Loads UI layout from saved preset named <code>presetName</code>.</td>
+</tr>
+<tr>
+<td><code>UpdateLayoutPreset(presetName)</code></td>
+<td>Bool</td>
+<td>Overwrites preset named <code>presetName</code> with current UI layout.</td>
+</tr>
+<tr>
+<td><code>ExportLayoutPreset(presetName, presetFilePath)</code></td>
+<td>Bool</td>
+<td>Exports preset named <code>presetName</code> to path <code>presetFilePath</code>.</td>
+</tr>
+<tr>
+<td><code>DeleteLayoutPreset(presetName)</code></td>
+<td>Bool</td>
+<td>Deletes preset named <code>presetName</code>.</td>
+</tr>
+<tr>
+<td><code>SaveLayoutPreset(presetName)</code></td>
+<td>Bool</td>
+<td>Saves current UI layout as a preset named <code>presetName</code>.</td>
+</tr>
+<tr>
+<td><code>ImportLayoutPreset(presetFilePath, presetName)</code></td>
+<td>Bool</td>
+<td>Imports preset from path <code>presetFilePath</code>. The optional argument <code>presetName</code> specifies how the preset shall be named. If not specified, the preset is named based on the filename.</td>
+</tr>
+<tr>
+<td><code>Quit()</code></td>
+<td>None</td>
+<td>Quits the Resolve App.</td>
+</tr>
+<tr>
+<td><code>ImportRenderPreset(presetPath)</code></td>
+<td>Bool</td>
+<td>Import a preset from presetPath (string) and set it as current preset for rendering.</td>
+</tr>
+<tr>
+<td><code>ExportRenderPreset(presetName, exportPath)</code></td>
+<td>Bool</td>
+<td>Export a preset to a given path (string) if presetName(string) exists.</td>
+</tr>
+<tr>
+<td><code>ImportBurnInPreset(presetPath)</code></td>
+<td>Bool</td>
+<td>Import a data burn in preset from a given presetPath (string)</td>
+</tr>
+<tr>
+<td><code>ExportBurnInPreset(presetName, exportPath)</code></td>
+<td>Bool</td>
+<td>Export a data burn in preset to a given path (string) if presetName (string) exists.</td>
+</tr>
+<tr>
+<td><code>GetKeyframeMode()</code></td>
+<td>keyframeMode</td>
+<td>Returns the currently set keyframe mode (int). Refer to section 'Keyframe Mode information' below for details.</td>
+</tr>
+<tr>
+<td><code>SetKeyframeMode(keyframeMode)</code></td>
+<td>Bool</td>
+<td>Returns True when <code>keyframeMode</code>(enum) is successfully set. Refer to section 'Keyframe Mode information' below for details.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="projectmanager">ProjectManager</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ArchiveProject(projectName, filePath, isArchiveSrcMedia=True, isArchiveRenderCache=True, isArchiveProxyMedia=False)</code></td>
+<td>Bool</td>
+<td>Archives project to provided file path with the configuration as provided by the optional arguments</td>
+</tr>
+<tr>
+<td><code>CreateProject(projectName)</code></td>
+<td>Project</td>
+<td>Creates and returns a project if projectName (string) is unique, and None if it is not.</td>
+</tr>
+<tr>
+<td><code>DeleteProject(projectName)</code></td>
+<td>Bool</td>
+<td>Delete project in the current folder if not currently loaded</td>
+</tr>
+<tr>
+<td><code>LoadProject(projectName)</code></td>
+<td>Project</td>
+<td>Loads and returns the project with name = projectName (string) if there is a match found, and None if there is no matching Project.</td>
+</tr>
+<tr>
+<td><code>GetCurrentProject()</code></td>
+<td>Project</td>
+<td>Returns the currently loaded Resolve project.</td>
+</tr>
+<tr>
+<td><code>SaveProject()</code></td>
+<td>Bool</td>
+<td>Saves the currently loaded project with its own name. Returns True if successful.</td>
+</tr>
+<tr>
+<td><code>CloseProject(project)</code></td>
+<td>Bool</td>
+<td>Closes the specified project without saving.</td>
+</tr>
+<tr>
+<td><code>CreateFolder(folderName)</code></td>
+<td>Bool</td>
+<td>Creates a folder if folderName (string) is unique.</td>
+</tr>
+<tr>
+<td><code>DeleteFolder(folderName)</code></td>
+<td>Bool</td>
+<td>Deletes the specified folder if it exists. Returns True in case of success.</td>
+</tr>
+<tr>
+<td><code>GetProjectListInCurrentFolder()</code></td>
+<td>[project names...]</td>
+<td>Returns a list of project names in current folder.</td>
+</tr>
+<tr>
+<td><code>GetFolderListInCurrentFolder()</code></td>
+<td>[folder names...]</td>
+<td>Returns a list of folder names in current folder.</td>
+</tr>
+<tr>
+<td><code>GotoRootFolder()</code></td>
+<td>Bool</td>
+<td>Opens root folder in database.</td>
+</tr>
+<tr>
+<td><code>GotoParentFolder()</code></td>
+<td>Bool</td>
+<td>Opens parent folder of current folder in database if current folder has parent.</td>
+</tr>
+<tr>
+<td><code>GetCurrentFolder()</code></td>
+<td>string</td>
+<td>Returns the current folder name.</td>
+</tr>
+<tr>
+<td><code>OpenFolder(folderName)</code></td>
+<td>Bool</td>
+<td>Opens folder under given name.</td>
+</tr>
+<tr>
+<td><code>ImportProject(filePath, projectName=None)</code></td>
+<td>Bool</td>
+<td>Imports a project from the file path provided with given project name, if any. Returns True if successful.</td>
+</tr>
+<tr>
+<td><code>ExportProject(projectName, filePath, withStillsAndLUTs=True)</code></td>
+<td>Bool</td>
+<td>Exports project to provided file path, including stills and LUTs if withStillsAndLUTs is True (enabled by default). Returns True in case of success.</td>
+</tr>
+<tr>
+<td><code>RestoreProject(filePath, projectName=None)</code></td>
+<td>Bool</td>
+<td>Restores a project from the file path provided with given project name, if any. Returns True if successful.</td>
+</tr>
+<tr>
+<td><code>GetCurrentDatabase()</code></td>
+<td>{dbInfo}</td>
+<td>Returns a dictionary (with keys <code>DbType</code>, <code>DbName</code> and optional <code>IpAddress</code>) corresponding to the current database connection</td>
+</tr>
+<tr>
+<td><code>GetDatabaseList()</code></td>
+<td>[{dbInfo}]</td>
+<td>Returns a list of dictionary items (with keys <code>DbType</code>, <code>DbName</code> and optional <code>IpAddress</code>) corresponding to all the databases added to Resolve</td>
+</tr>
+<tr>
+<td><code>SetCurrentDatabase({dbInfo})</code></td>
+<td>Bool</td>
+<td>Switches current database connection to the database specified by the keys below, and closes any open project.<br><code>DbType</code>: <code>Disk</code> or <code>PostgreSQL</code> (string)<br><code>DbName</code>: database name (string)<br><code>IpAddress</code>: IP address of the PostgreSQL server (string, optional key - defaults to <code>127.0.0.1</code>)</td>
+</tr>
+<tr>
+<td><code>CreateCloudProject({cloudSettings})</code></td>
+<td>Project</td>
+<td>Creates and returns a cloud project.<br>'{cloudSettings}': Check 'Cloud Projects Settings' subsection below for more information.</td>
+</tr>
+<tr>
+<td><code>LoadCloudProject({cloudSettings})</code></td>
+<td>Project</td>
+<td>Loads and returns a cloud project with the following cloud settings if there is a match found, and None if there is no matching cloud project.<br>'{cloudSettings}': Check 'Cloud Projects Settings' subsection below for more information.</td>
+</tr>
+<tr>
+<td><code>ImportCloudProject(filePath, {cloudSettings})</code></td>
+<td>Bool</td>
+<td>Returns True if import cloud project is successful; False otherwise<br><code>filePath</code>: String; filePath of file to import<br>'{cloudSettings}': Check 'Cloud Projects Settings' subsection below for more information.</td>
+</tr>
+<tr>
+<td><code>RestoreCloudProject(folderPath, {cloudSettings})</code></td>
+<td>Bool</td>
+<td>Returns True if restore cloud project is successful; False otherwise<br><code>folderPath</code>: String; path of folder to restore<br>'{cloudSettings}': Check 'Cloud Projects Settings' subsection below for more information.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="project">Project</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetMediaPool()</code></td>
+<td>MediaPool</td>
+<td>Returns the Media Pool object.</td>
+</tr>
+<tr>
+<td><code>GetTimelineCount()</code></td>
+<td>int</td>
+<td>Returns the number of timelines currently present in the project.</td>
+</tr>
+<tr>
+<td><code>GetTimelineByIndex(idx)</code></td>
+<td>Timeline</td>
+<td>Returns timeline at the given index, 1 &lt;= idx &lt;= project.GetTimelineCount()</td>
+</tr>
+<tr>
+<td><code>GetCurrentTimeline()</code></td>
+<td>Timeline</td>
+<td>Returns the currently loaded timeline.</td>
+</tr>
+<tr>
+<td><code>SetCurrentTimeline(timeline)</code></td>
+<td>Bool</td>
+<td>Sets given timeline as current timeline for the project. Returns True if successful.</td>
+</tr>
+<tr>
+<td><code>GetGallery()</code></td>
+<td>Gallery</td>
+<td>Returns the Gallery object.</td>
+</tr>
+<tr>
+<td><code>GetName()</code></td>
+<td>string</td>
+<td>Returns project name.</td>
+</tr>
+<tr>
+<td><code>SetName(projectName)</code></td>
+<td>Bool</td>
+<td>Sets project name if given projectName (string) is unique.</td>
+</tr>
+<tr>
+<td><code>GetPresetList()</code></td>
+<td>[presets...]</td>
+<td>Returns a list of presets and their information.</td>
+</tr>
+<tr>
+<td><code>SetPreset(presetName)</code></td>
+<td>Bool</td>
+<td>Sets preset by given presetName (string) into project.</td>
+</tr>
+<tr>
+<td><code>AddRenderJob()</code></td>
+<td>string</td>
+<td>Adds a render job based on current render settings to the render queue. Returns a unique job id (string) for the new render job.</td>
+</tr>
+<tr>
+<td><code>DeleteRenderJob(jobId)</code></td>
+<td>Bool</td>
+<td>Deletes render job for input job id (string).</td>
+</tr>
+<tr>
+<td><code>DeleteAllRenderJobs()</code></td>
+<td>Bool</td>
+<td>Deletes all render jobs in the queue.</td>
+</tr>
+<tr>
+<td><code>GetRenderJobList()</code></td>
+<td>[render jobs...]</td>
+<td>Returns a list of render jobs and their information.</td>
+</tr>
+<tr>
+<td><code>GetRenderPresetList()</code></td>
+<td>[presets...]</td>
+<td>Returns a list of render presets and their information.</td>
+</tr>
+<tr>
+<td><code>StartRendering(jobId1, jobId2, ...)</code></td>
+<td>Bool</td>
+<td>Starts rendering jobs indicated by the input job ids.</td>
+</tr>
+<tr>
+<td><code>StartRendering([jobIds...], isInteractiveMode=False)</code></td>
+<td>Bool</td>
+<td>Starts rendering jobs indicated by the input job ids.<br>The optional <code>isInteractiveMode</code>, when set, enables error feedback in the UI during rendering.</td>
+</tr>
+<tr>
+<td><code>StartRendering(isInteractiveMode=False)</code></td>
+<td>Bool</td>
+<td>Starts rendering all queued render jobs.<br>The optional <code>isInteractiveMode</code>, when set, enables error feedback in the UI during rendering.</td>
+</tr>
+<tr>
+<td><code>StopRendering()</code></td>
+<td>None</td>
+<td>Stops any current render processes.</td>
+</tr>
+<tr>
+<td><code>IsRenderingInProgress()</code></td>
+<td>Bool</td>
+<td>Returns True if rendering is in progress.</td>
+</tr>
+<tr>
+<td><code>LoadRenderPreset(presetName)</code></td>
+<td>Bool</td>
+<td>Sets a preset as current preset for rendering if presetName (string) exists.</td>
+</tr>
+<tr>
+<td><code>SaveAsNewRenderPreset(presetName)</code></td>
+<td>Bool</td>
+<td>Creates new render preset by given name if presetName(string) is unique.</td>
+</tr>
+<tr>
+<td><code>DeleteRenderPreset(presetName)</code></td>
+<td>Bool</td>
+<td>Delete render preset by provided name.</td>
+</tr>
+<tr>
+<td><code>SetRenderSettings({settings})</code></td>
+<td>Bool</td>
+<td>Sets given settings for rendering. Settings is a dict, with support for the keys:<br>Refer to "Looking up render settings" section for information for supported settings</td>
+</tr>
+<tr>
+<td><code>GetRenderJobStatus(jobId)</code></td>
+<td>{status info}</td>
+<td>Returns a dict with job status and completion percentage of the job by given jobId (string).</td>
+</tr>
+<tr>
+<td><code>GetQuickExportRenderPresets()</code></td>
+<td>[preset_name..]</td>
+<td>Returns a list of Quick Export render presets by name</td>
+</tr>
+<tr>
+<td><code>RenderWithQuickExport(preset_name, {param_dict}</code></td>
+<td>{status info}</td>
+<td>Starts a quick export render for the current active timeline. preset_name from GetQuickExportRenderPresets list. param_dict supports render settings keys <code>TargetDir</code>, <code>CustomName</code>, <code>VideoQuality</code>, and <code>EnableUpload</code>.<br><code>EnableUpload</code> key enables direct upload for supported web presets.<br>Returns a dict with job status and time taken to render, or an error string if render has failed or not attempted<br>Refer to "Looking up Render Settings" section for information on the above supported settings</td>
+</tr>
+<tr>
+<td><code>GetSetting(settingName)</code></td>
+<td>string</td>
+<td>Returns value of project setting (indicated by settingName, string). Check the section below for more information.</td>
+</tr>
+<tr>
+<td><code>SetSetting(settingName, settingValue)</code></td>
+<td>Bool</td>
+<td>Sets the project setting (indicated by settingName, string) to the value (settingValue, string). Check the section below for more information.</td>
+</tr>
+<tr>
+<td><code>GetRenderFormats()</code></td>
+<td>{render formats..}</td>
+<td>Returns a dict (format -&gt; file extension) of available render formats.</td>
+</tr>
+<tr>
+<td><code>GetRenderCodecs(renderFormat)</code></td>
+<td>{render codecs...}</td>
+<td>Returns a dict (codec description -&gt; codec name) of available codecs for given render format (string).</td>
+</tr>
+<tr>
+<td><code>GetCurrentRenderFormatAndCodec()</code></td>
+<td>{format, codec}</td>
+<td>Returns a dict with currently selected format <code>format</code> and render codec <code>codec</code>.</td>
+</tr>
+<tr>
+<td><code>SetCurrentRenderFormatAndCodec(format, codec)</code></td>
+<td>Bool</td>
+<td>Sets given render format (string) and render codec (string) as options for rendering.</td>
+</tr>
+<tr>
+<td><code>GetCurrentRenderMode()</code></td>
+<td>int</td>
+<td>Returns the render mode: 0 - Individual clips, 1 - Single clip.</td>
+</tr>
+<tr>
+<td><code>SetCurrentRenderMode(renderMode)</code></td>
+<td>Bool</td>
+<td>Sets the render mode. Specify renderMode = 0 for Individual clips, 1 for Single clip.</td>
+</tr>
+<tr>
+<td><code>GetRenderResolutions(format, codec)</code></td>
+<td>[{Resolution}]</td>
+<td>Returns list of resolutions applicable for the given render format (string) and render codec (string). Returns full list of resolutions if no argument is provided. Each element in the list is a dictionary with 2 keys <code>Width</code> and <code>Height</code>.</td>
+</tr>
+<tr>
+<td><code>RefreshLUTList()</code></td>
+<td>Bool</td>
+<td>Refreshes LUT List</td>
+</tr>
+<tr>
+<td><code>GetUniqueId()</code></td>
+<td>string</td>
+<td>Returns a unique ID for the project item</td>
+</tr>
+<tr>
+<td><code>InsertAudioToCurrentTrackAtPlayhead(mediaPath, startOffsetInSamples, durationInSamples)</code></td>
+<td>Bool</td>
+<td>Inserts the media specified by mediaPath (string) with startOffsetInSamples (int) and durationInSamples (int) at the playhead on a selected track on the Fairlight page. Returns True if successful, otherwise False.</td>
+</tr>
+<tr>
+<td><code>LoadBurnInPreset(presetName)</code></td>
+<td>Bool</td>
+<td>Loads user defined data burn in preset for project when supplied presetName (string). Returns true if successful.</td>
+</tr>
+<tr>
+<td><code>ExportCurrentFrameAsStill(filePath)</code></td>
+<td>Bool</td>
+<td>Exports current frame as still to supplied filePath. filePath must end in valid export file format. Returns True if successful, False otherwise.</td>
+</tr>
+<tr>
+<td><code>GetColorGroupsList()</code></td>
+<td>[ColorGroups...]</td>
+<td>Returns a list of all group objects in the timeline.</td>
+</tr>
+<tr>
+<td><code>AddColorGroup(groupName)</code></td>
+<td>ColorGroup</td>
+<td>Creates a new ColorGroup. groupName must be a unique string.</td>
+</tr>
+<tr>
+<td><code>DeleteColorGroup(colorGroup)</code></td>
+<td>Bool</td>
+<td>Deletes the given color group and sets clips to ungrouped.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mediastorage">MediaStorage</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetMountedVolumeList()</code></td>
+<td>[paths...]</td>
+<td>Returns list of folder paths corresponding to mounted volumes displayed in Resolve’s Media Storage.</td>
+</tr>
+<tr>
+<td><code>GetSubFolderList(folderPath)</code></td>
+<td>[paths...]</td>
+<td>Returns list of folder paths in the given absolute folder path.</td>
+</tr>
+<tr>
+<td><code>GetFileList(folderPath)</code></td>
+<td>[paths...]</td>
+<td>Returns list of media and file listings in the given absolute folder path. Note that media listings may be logically consolidated entries.</td>
+</tr>
+<tr>
+<td><code>RevealInStorage(path)</code></td>
+<td>Bool</td>
+<td>Expands and displays given file/folder path in Resolve’s Media Storage.</td>
+</tr>
+<tr>
+<td><code>AddItemListToMediaPool(item1, item2, ...)</code></td>
+<td>[clips...]</td>
+<td>Adds specified file/folder paths from Media Storage into current Media Pool folder. Input is one or more file/folder paths. Returns a list of the MediaPoolItems created.</td>
+</tr>
+<tr>
+<td><code>AddItemListToMediaPool([items...])</code></td>
+<td>[clips...]</td>
+<td>Adds specified file/folder paths from Media Storage into current Media Pool folder. Input is an array of file/folder paths. Returns a list of the MediaPoolItems created.</td>
+</tr>
+<tr>
+<td><code>AddItemListToMediaPool([{itemInfo}, ...])</code></td>
+<td>[clips...]</td>
+<td>Adds list of itemInfos specified as dict of <code>media</code>, <code>startFrame</code> (int), <code>endFrame</code> (int) from Media Storage into current Media Pool folder. Returns a list of the MediaPoolItems created.</td>
+</tr>
+<tr>
+<td><code>AddClipMattesToMediaPool(MediaPoolItem, [paths], stereoEye)</code></td>
+<td>Bool</td>
+<td>Adds specified media files as mattes for the specified MediaPoolItem. StereoEye is an optional argument for specifying which eye to add the matte to for stereo clips (<code>left</code> or <code>right</code>). Returns True if successful.</td>
+</tr>
+<tr>
+<td><code>AddTimelineMattesToMediaPool([paths])</code></td>
+<td>[MediaPoolItems]</td>
+<td>Adds specified media files as timeline mattes in current media pool folder. Returns a list of created MediaPoolItems.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mediapool">MediaPool</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetRootFolder()</code></td>
+<td>Folder</td>
+<td>Returns root Folder of Media Pool</td>
+</tr>
+<tr>
+<td><code>AddSubFolder(folder, name)</code></td>
+<td>Folder</td>
+<td>Adds new subfolder under specified Folder object with the given name.</td>
+</tr>
+<tr>
+<td><code>RefreshFolders()</code></td>
+<td>Bool</td>
+<td>Updates the folders in collaboration mode</td>
+</tr>
+<tr>
+<td><code>CreateEmptyTimeline(name)</code></td>
+<td>Timeline</td>
+<td>Adds new timeline with given name.</td>
+</tr>
+<tr>
+<td><code>AppendToTimeline(clip1, clip2, ...)</code></td>
+<td>[TimelineItem]</td>
+<td>Appends specified MediaPoolItem objects in the current timeline. Returns the list of appended timelineItems.</td>
+</tr>
+<tr>
+<td><code>AppendToTimeline([clips])</code></td>
+<td>[TimelineItem]</td>
+<td>Appends specified MediaPoolItem objects in the current timeline. Returns the list of appended timelineItems.</td>
+</tr>
+<tr>
+<td><code>AppendToTimeline([{clipInfo}, ...])</code></td>
+<td>[TimelineItem]</td>
+<td>Appends list of clipInfos specified as dict of <code>mediaPoolItem</code>, <code>startFrame</code> (float/int), <code>endFrame</code> (float/int), (optional) <code>mediaType</code> (int; 1 - Video only, 2 - Audio only), <code>trackIndex</code> (int) and <code>recordFrame</code> (float/int). Returns the list of appended timelineItems.</td>
+</tr>
+<tr>
+<td><code>CreateTimelineFromClips(name, clip1, clip2,...)</code></td>
+<td>Timeline</td>
+<td>Creates new timeline with specified name, and appends the specified MediaPoolItem objects.</td>
+</tr>
+<tr>
+<td><code>CreateTimelineFromClips(name, [clips])</code></td>
+<td>Timeline</td>
+<td>Creates new timeline with specified name, and appends the specified MediaPoolItem objects.</td>
+</tr>
+<tr>
+<td><code>CreateTimelineFromClips(name, [{clipInfo}])</code></td>
+<td>Timeline</td>
+<td>Creates new timeline with specified name, appending the list of clipInfos specified as a dict of <code>mediaPoolItem</code>, <code>startFrame</code> (float/int), <code>endFrame</code> (float/int), <code>recordFrame</code> (float/int).</td>
+</tr>
+<tr>
+<td><code>ImportTimelineFromFile(filePath, {importOptions})</code></td>
+<td>Timeline</td>
+<td>Creates timeline based on parameters within given file (AAF/EDL/XML/FCPXML/DRT/ADL/OTIO) and optional importOptions dict, with support for the keys:<br><code>timelineName</code>: string, specifies the name of the timeline to be created. Not valid for DRT import<br><code>importSourceClips</code>: Bool, specifies whether source clips should be imported, True by default. Not valid for DRT import<br><code>sourceClipsPath</code>: string, specifies a filesystem path to search for source clips if the media is inaccessible in their original path and if <code>importSourceClips</code> is True<br><code>sourceClipsFolders</code>: List of Media Pool folder objects to search for source clips if the media is not present in current folder and if <code>importSourceClips</code> is False. Not valid for DRT import<br><code>interlaceProcessing</code>: Bool, specifies whether to enable interlace processing on the imported timeline being created. valid only for AAF import</td>
+</tr>
+<tr>
+<td><code>DeleteTimelines([timeline])</code></td>
+<td>Bool</td>
+<td>Deletes specified timelines in the media pool.</td>
+</tr>
+<tr>
+<td><code>GetCurrentFolder()</code></td>
+<td>Folder</td>
+<td>Returns currently selected Folder.</td>
+</tr>
+<tr>
+<td><code>SetCurrentFolder(Folder)</code></td>
+<td>Bool</td>
+<td>Sets current folder by given Folder.</td>
+</tr>
+<tr>
+<td><code>DeleteClips([clips])</code></td>
+<td>Bool</td>
+<td>Deletes specified clips or timeline mattes in the media pool</td>
+</tr>
+<tr>
+<td><code>ImportFolderFromFile(filePath, sourceClipsPath=``)</code></td>
+<td>Bool</td>
+<td>Returns true if import from given DRB filePath is successful, false otherwise<br>sourceClipsPath is a string that specifies a filesystem path to search for source clips if the media is inaccessible in their original path, empty by default</td>
+</tr>
+<tr>
+<td><code>DeleteFolders([subfolders])</code></td>
+<td>Bool</td>
+<td>Deletes specified subfolders in the media pool</td>
+</tr>
+<tr>
+<td><code>MoveClips([clips], targetFolder)</code></td>
+<td>Bool</td>
+<td>Moves specified clips to target folder.</td>
+</tr>
+<tr>
+<td><code>MoveFolders([folders], targetFolder)</code></td>
+<td>Bool</td>
+<td>Moves specified folders to target folder.</td>
+</tr>
+<tr>
+<td><code>GetClipMatteList(MediaPoolItem)</code></td>
+<td>[paths]</td>
+<td>Get mattes for specified MediaPoolItem, as a list of paths to the matte files.</td>
+</tr>
+<tr>
+<td><code>GetTimelineMatteList(Folder)</code></td>
+<td>[MediaPoolItems]</td>
+<td>Get mattes in specified Folder, as list of MediaPoolItems.</td>
+</tr>
+<tr>
+<td><code>DeleteClipMattes(MediaPoolItem, [paths])</code></td>
+<td>Bool</td>
+<td>Delete mattes based on their file paths, for specified MediaPoolItem. Returns True on success.</td>
+</tr>
+<tr>
+<td><code>RelinkClips([MediaPoolItem], folderPath)</code></td>
+<td>Bool</td>
+<td>Update the folder location of specified media pool clips with the specified folder path.</td>
+</tr>
+<tr>
+<td><code>UnlinkClips([MediaPoolItem])</code></td>
+<td>Bool</td>
+<td>Unlink specified media pool clips.</td>
+</tr>
+<tr>
+<td><code>ImportMedia([items...])</code></td>
+<td>[MediaPoolItems]</td>
+<td>Imports specified file/folder paths into current Media Pool folder. Input is an array of file/folder paths. Returns a list of the MediaPoolItems created.</td>
+</tr>
+<tr>
+<td><code>ImportMedia([{clipInfo}])</code></td>
+<td>[MediaPoolItems]</td>
+<td>Imports file path(s) into current Media Pool folder as specified in list of clipInfo dict. Returns a list of the MediaPoolItems created.<br>Each clipInfo gets imported as one MediaPoolItem unless 'Show Individual Frames' is turned on.<br>Example: ImportMedia([{<code>FilePath</code>:"file_%03d.dpx", <code>StartIndex</code>:1, <code>EndIndex</code>:100}]) would import clip "file_[001-100].dpx".</td>
+</tr>
+<tr>
+<td><code>ExportMetadata(fileName, [clips])</code></td>
+<td>Bool</td>
+<td>Exports metadata of specified clips to <code>fileName</code> in CSV format.<br>If no clips are specified, all clips from media pool will be used.</td>
+</tr>
+<tr>
+<td><code>GetUniqueId()</code></td>
+<td>string</td>
+<td>Returns a unique ID for the media pool</td>
+</tr>
+<tr>
+<td><code>CreateStereoClip(LeftMediaPoolItem, RightMediaPoolItem)</code></td>
+<td>MediaPoolItem</td>
+<td>Takes in two existing media pool items and creates a new 3D stereoscopic media pool entry replacing the input media in the media pool.</td>
+</tr>
+<tr>
+<td><code>AutoSyncAudio([MediaPoolItems], {audioSyncSettings})</code></td>
+<td>Bool</td>
+<td>Syncs audio for specified [MediaPoolItems] (list). The list must contain a minimum of two MediaPoolItems - at least one video and one audio clip.<br>Returns True if successful. Refer to 'Audio Sync Settings' section for details.</td>
+</tr>
+<tr>
+<td><code>GetSelectedClips()</code></td>
+<td>[MediaPoolItems]</td>
+<td>Returns the current selected MediaPoolItems</td>
+</tr>
+<tr>
+<td><code>SetSelectedClip(MediaPoolItem)</code></td>
+<td>Bool</td>
+<td>Sets the selected MediaPoolItem to the given MediaPoolItem</td>
+</tr>
+</tbody>
+</table>
+<h3 id="folder">Folder</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetClipList()</code></td>
+<td>[clips...]</td>
+<td>Returns a list of clips (items) within the folder.</td>
+</tr>
+<tr>
+<td><code>GetName()</code></td>
+<td>string</td>
+<td>Returns the media folder name.</td>
+</tr>
+<tr>
+<td><code>GetSubFolderList()</code></td>
+<td>[folders...]</td>
+<td>Returns a list of subfolders in the folder.</td>
+</tr>
+<tr>
+<td><code>GetIsFolderStale()</code></td>
+<td>bool</td>
+<td>Returns true if folder is stale in collaboration mode, false otherwise</td>
+</tr>
+<tr>
+<td><code>GetUniqueId()</code></td>
+<td>string</td>
+<td>Returns a unique ID for the media pool folder</td>
+</tr>
+<tr>
+<td><code>Export(filePath)</code></td>
+<td>bool</td>
+<td>Returns true if export of DRB folder to filePath is successful, false otherwise</td>
+</tr>
+<tr>
+<td><code>TranscribeAudio()</code></td>
+<td>Bool</td>
+<td>Transcribes audio of the MediaPoolItems within the folder and nested folders. Returns True if successful; False otherwise</td>
+</tr>
+<tr>
+<td><code>ClearTranscription()</code></td>
+<td>Bool</td>
+<td>Clears audio transcription of the MediaPoolItems within the folder and nested folders. Returns True if successful; False otherwise.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mediapoolitem">MediaPoolItem</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetName()</code></td>
+<td>string</td>
+<td>Returns the clip name.</td>
+</tr>
+<tr>
+<td><code>GetMetadata(metadataType=None)</code></td>
+<td>string|dict</td>
+<td>Returns the metadata value for the key <code>metadataType</code>.<br>If no argument is specified, a dict of all set metadata properties is returned.</td>
+</tr>
+<tr>
+<td><code>SetMetadata(metadataType, metadataValue)</code></td>
+<td>Bool</td>
+<td>Sets the given metadata to metadataValue (string). Returns True if successful.</td>
+</tr>
+<tr>
+<td><code>SetMetadata({metadata})</code></td>
+<td>Bool</td>
+<td>Sets the item metadata with specified <code>metadata</code> dict. Returns True if successful.</td>
+</tr>
+<tr>
+<td><code>GetThirdPartyMetadata(metadataType=None)</code></td>
+<td>string|dict</td>
+<td>Returns the third party metadata value for the key <code>metadataType</code>.<br>If no argument is specified, a dict of all set third party metadata properties is returned.</td>
+</tr>
+<tr>
+<td><code>SetThirdPartyMetadata(metadataType, metadataValue)</code></td>
+<td>Bool</td>
+<td>Sets/Add the given third party metadata to metadataValue (string). Returns True if successful.</td>
+</tr>
+<tr>
+<td><code>SetThirdPartyMetadata({metadata})</code></td>
+<td>Bool</td>
+<td>Sets/Add the item third party metadata with specified <code>metadata</code> dict. Returns True if successful.</td>
+</tr>
+<tr>
+<td><code>GetMediaId()</code></td>
+<td>string</td>
+<td>Returns the unique ID for the MediaPoolItem.</td>
+</tr>
+<tr>
+<td><code>AddMarker(frameId, color, name, note, duration, customData)</code></td>
+<td>Bool</td>
+<td>Creates a new marker at given frameId position and with given marker information. <code>customData</code> is optional and helps to attach user specific data to the marker.</td>
+</tr>
+<tr>
+<td><code>GetMarkers()</code></td>
+<td>{markers...}</td>
+<td>Returns a dict (frameId -&gt; {information}) of all markers and dicts with their information.<br>Example of output format: {96.0: {<code>color</code>: <code>Green</code>, <code>duration</code>: 1.0, <code>note</code>: <code>, `name`: 'Marker 1', `customData`:</code>}, ...}<br>In the above example - there is one <code>Green</code> marker at offset 96 (position of the marker)</td>
+</tr>
+<tr>
+<td><code>GetMarkerByCustomData(customData)</code></td>
+<td>{markers...}</td>
+<td>Returns marker {information} for the first matching marker with specified customData.</td>
+</tr>
+<tr>
+<td><code>UpdateMarkerCustomData(frameId, customData)</code></td>
+<td>Bool</td>
+<td>Updates customData (string) for the marker at given frameId position. CustomData is not exposed via UI and is useful for scripting developer to attach any user specific data to markers.</td>
+</tr>
+<tr>
+<td><code>GetMarkerCustomData(frameId)</code></td>
+<td>string</td>
+<td>Returns customData string for the marker at given frameId position.</td>
+</tr>
+<tr>
+<td><code>DeleteMarkersByColor(color)</code></td>
+<td>Bool</td>
+<td>Delete all markers of the specified color from the media pool item. <code>All</code> as argument deletes all color markers.</td>
+</tr>
+<tr>
+<td><code>DeleteMarkerAtFrame(frameNum)</code></td>
+<td>Bool</td>
+<td>Delete marker at frame number from the media pool item.</td>
+</tr>
+<tr>
+<td><code>DeleteMarkerByCustomData(customData)</code></td>
+<td>Bool</td>
+<td>Delete first matching marker with specified customData.</td>
+</tr>
+<tr>
+<td><code>AddFlag(color)</code></td>
+<td>Bool</td>
+<td>Adds a flag with given color (string).</td>
+</tr>
+<tr>
+<td><code>GetFlagList()</code></td>
+<td>[colors...]</td>
+<td>Returns a list of flag colors assigned to the item.</td>
+</tr>
+<tr>
+<td><code>ClearFlags(color)</code></td>
+<td>Bool</td>
+<td>Clears the flag of the given color if one exists. An <code>All</code> argument is supported and clears all flags.</td>
+</tr>
+<tr>
+<td><code>GetClipColor()</code></td>
+<td>string</td>
+<td>Returns the item color as a string.</td>
+</tr>
+<tr>
+<td><code>SetClipColor(colorName)</code></td>
+<td>Bool</td>
+<td>Sets the item color based on the colorName (string).</td>
+</tr>
+<tr>
+<td><code>ClearClipColor()</code></td>
+<td>Bool</td>
+<td>Clears the item color.</td>
+</tr>
+<tr>
+<td><code>GetClipProperty(propertyName=None)</code></td>
+<td>string|dict</td>
+<td>Returns the property value for the key <code>propertyName</code>.<br>If no argument is specified, a dict of all clip properties is returned. Check the section below for more information.</td>
+</tr>
+<tr>
+<td><code>SetClipProperty(propertyName, propertyValue)</code></td>
+<td>Bool</td>
+<td>Sets the given property to propertyValue (string). Check the section below for more information.</td>
+</tr>
+<tr>
+<td><code>LinkProxyMedia(proxyMediaFilePath)</code></td>
+<td>Bool</td>
+<td>Links proxy media located at path specified by arg <code>proxyMediaFilePath</code> with the current clip. <code>proxyMediaFilePath</code> should be absolute clip path.</td>
+</tr>
+<tr>
+<td><code>LinkFullResolutionMedia(fullResMediaPath)</code></td>
+<td>Bool</td>
+<td>Links proxy media to full resolution media files specified via its path.</td>
+</tr>
+<tr>
+<td><code>UnlinkProxyMedia()</code></td>
+<td>Bool</td>
+<td>Unlinks any proxy media associated with clip.</td>
+</tr>
+<tr>
+<td><code>ReplaceClip(filePath)</code></td>
+<td>Bool</td>
+<td>Replaces the underlying asset and metadata of MediaPoolItem with the specified absolute clip path.</td>
+</tr>
+<tr>
+<td><code>ReplaceClipPreserveSubClip(filePath)</code></td>
+<td>Bool</td>
+<td>Replaces the underlying asset and metadata of a video or audio clip with the specified absolute clip path, preserving original sub clip extents.</td>
+</tr>
+<tr>
+<td><code>GetUniqueId()</code></td>
+<td>string</td>
+<td>Returns a unique ID for the media pool item</td>
+</tr>
+<tr>
+<td><code>TranscribeAudio()</code></td>
+<td>Bool</td>
+<td>Transcribes audio of the MediaPoolItem. Returns True if successful; False otherwise</td>
+</tr>
+<tr>
+<td><code>ClearTranscription()</code></td>
+<td>Bool</td>
+<td>Clears audio transcription of the MediaPoolItem. Returns True if successful; False otherwise.</td>
+</tr>
+<tr>
+<td><code>GetAudioMapping()</code></td>
+<td>json formatted string</td>
+<td>Returns a string with MediaPoolItem's audio mapping information. Check 'Audio Mapping' section below for more information.</td>
+</tr>
+<tr>
+<td><code>GetMarkInOut()</code></td>
+<td>{mark}</td>
+<td>Returns dict of in/out marks set (keys omitted if not set), example:<br>{<code>video</code>: {<code>in</code>: 0, <code>out</code>: 134}, <code>audio</code>: {<code>in</code>: 0, <code>out</code>: 134}}</td>
+</tr>
+<tr>
+<td><code>SetMarkInOut(in, out, type=</code>all<code>)</code></td>
+<td>Bool</td>
+<td>Sets mark in/out of type <code>video</code>, <code>audio</code> or <code>all</code> (default).</td>
+</tr>
+<tr>
+<td><code>ClearMarkInOut(type=</code>all<code>)</code></td>
+<td>Bool</td>
+<td>Clears mark in/out of type <code>video</code>, <code>audio</code> or <code>all</code> (default).</td>
+</tr>
+<tr>
+<td><code>MonitorGrowingFile()</code></td>
+<td>Bool</td>
+<td>Monitor a file as long as it keeps growing (stops if the file does not grow for some time).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="timeline">Timeline</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetName()</code></td>
+<td>string</td>
+<td>Returns the timeline name.</td>
+</tr>
+<tr>
+<td><code>SetName(timelineName)</code></td>
+<td>Bool</td>
+<td>Sets the timeline name if timelineName (string) is unique. Returns True if successful.</td>
+</tr>
+<tr>
+<td><code>GetStartFrame()</code></td>
+<td>int</td>
+<td>Returns the frame number at the start of timeline.</td>
+</tr>
+<tr>
+<td><code>GetEndFrame()</code></td>
+<td>int</td>
+<td>Returns the frame number at the end of timeline.</td>
+</tr>
+<tr>
+<td><code>SetStartTimecode(timecode)</code></td>
+<td>Bool</td>
+<td>Set the start timecode of the timeline to the string <code>timecode</code>. Returns true when the change is successful, false otherwise.</td>
+</tr>
+<tr>
+<td><code>GetStartTimecode()</code></td>
+<td>string</td>
+<td>Returns the start timecode for the timeline.</td>
+</tr>
+<tr>
+<td><code>GetTrackCount(trackType)</code></td>
+<td>int</td>
+<td>Returns the number of tracks for the given track type (<code>audio</code>, <code>video</code> or <code>subtitle</code>).</td>
+</tr>
+<tr>
+<td><code>AddTrack(trackType, subTrackType)</code></td>
+<td>Bool</td>
+<td>Adds track of trackType (<code>video</code>, <code>subtitle</code>, <code>audio</code>). Optional argument subTrackType is used for <code>audio</code> trackType.<br>subTrackType can be one of {<code>mono</code>, <code>stereo</code>, lrc, lcr, lrcs, lcrs, quad, <code>5.0</code>, <code>5.0film</code>, <code>5.1</code>, <code>5.1film</code>, <code>7.0</code>, <code>7.0film</code> ",7.1", <code>7.1film</code>, <code>adaptive1</code>, ... , <code>adaptive36</code>}<br>subTrackType defaults to <code>mono</code> if skipped and track type is ‘audio’.</td>
+</tr>
+<tr>
+<td><code>AddTrack(trackType, newTrackOptions)</code></td>
+<td>Bool</td>
+<td>Adds track of trackType (<code>video</code>, <code>subtitle</code>, <code>audio</code>). Optional newTrackOptions = {<code>audioType</code>: same as subTrackType above, <code>index</code>: 1 &lt;= index &lt;= GetTrackCount(trackType))<br><code>audiotype</code> defaults to <code>mono</code> if arg skipped and track type is ‘audio’.<br><code>index</code> if skipped (or if value not in bounds) appends track.</td>
+</tr>
+<tr>
+<td><code>DeleteTrack(trackType, trackIndex)</code></td>
+<td>Bool</td>
+<td>Deletes track of trackType (<code>video</code>, <code>subtitle</code>, <code>audio</code>) and given trackIndex. 1 &lt;= trackIndex &lt;= GetTrackCount(trackType).</td>
+</tr>
+<tr>
+<td><code>GetTrackSubType(trackType, trackIndex)</code></td>
+<td>string</td>
+<td>Returns an audio track's format.<br>the return value is one of {<code>mono</code>, <code>stereo</code>, lrc, lcr, lrcs, lcrs, quad, <code>5.0</code>, <code>5.0film</code>, <code>5.1</code>, <code>5.1film</code>, <code>7.0</code>, <code>7.0film</code> ",7.1", <code>7.1film</code>, <code>adaptive1</code>, ... , <code>adaptive36</code>}<br>and matches the parameters <code>subTrackType</code> and <code>audioType</code> in timeline.AddTrack.<br>returns a blank string for non audio tracks</td>
+</tr>
+<tr>
+<td><code>SetTrackEnable(trackType, trackIndex, Bool)</code></td>
+<td>Bool</td>
+<td>Enables/Disables track with given trackType and trackIndex<br>trackType is one of {<code>audio</code>, <code>video</code>, <code>subtitle</code>}<br>1 &lt;= trackIndex &lt;= GetTrackCount(trackType).</td>
+</tr>
+<tr>
+<td><code>GetIsTrackEnabled(trackType, trackIndex)</code></td>
+<td>Bool</td>
+<td>Returns True if track with given trackType and trackIndex is enabled and False otherwise.<br>trackType is one of {<code>audio</code>, <code>video</code>, <code>subtitle</code>}<br>1 &lt;= trackIndex &lt;= GetTrackCount(trackType).</td>
+</tr>
+<tr>
+<td><code>SetTrackLock(trackType, trackIndex, Bool)</code></td>
+<td>Bool</td>
+<td>Locks/Unlocks track with given trackType and trackIndex<br>trackType is one of {<code>audio</code>, <code>video</code>, <code>subtitle</code>}<br>1 &lt;= trackIndex &lt;= GetTrackCount(trackType).</td>
+</tr>
+<tr>
+<td><code>GetIsTrackLocked(trackType, trackIndex)</code></td>
+<td>Bool</td>
+<td>Returns True if track with given trackType and trackIndex is locked and False otherwise.<br>trackType is one of {<code>audio</code>, <code>video</code>, <code>subtitle</code>}<br>1 &lt;= trackIndex &lt;= GetTrackCount(trackType).</td>
+</tr>
+<tr>
+<td><code>DeleteClips([timelineItems], Bool)</code></td>
+<td>Bool</td>
+<td>Deletes specified TimelineItems from the timeline, performing ripple delete if the second argument is True. Second argument is optional (The default for this is False)</td>
+</tr>
+<tr>
+<td><code>SetClipsLinked([timelineItems], Bool)</code></td>
+<td>Bool</td>
+<td>Links or unlinks the specified TimelineItems depending on second argument.</td>
+</tr>
+<tr>
+<td><code>GetItemListInTrack(trackType, index)</code></td>
+<td>[items...]</td>
+<td>Returns a list of timeline items on that track (based on trackType and index). 1 &lt;= index &lt;= GetTrackCount(trackType).</td>
+</tr>
+<tr>
+<td><code>AddMarker(frameId, color, name, note, duration, customData)</code></td>
+<td>Bool</td>
+<td>Creates a new marker at given frameId position and with given marker information. <code>customData</code> is optional and helps to attach user specific data to the marker.</td>
+</tr>
+<tr>
+<td><code>GetMarkers()</code></td>
+<td>{markers...}</td>
+<td>Returns a dict (frameId -&gt; {information}) of all markers and dicts with their information.<br>Example: a value of {96.0: {<code>color</code>: <code>Green</code>, <code>duration</code>: 1.0, <code>note</code>: <code>, `name`: 'Marker 1', `customData`:</code>}, ...} indicates a single green marker at timeline offset 96</td>
+</tr>
+<tr>
+<td><code>GetMarkerByCustomData(customData)</code></td>
+<td>{markers...}</td>
+<td>Returns marker {information} for the first matching marker with specified customData.</td>
+</tr>
+<tr>
+<td><code>UpdateMarkerCustomData(frameId, customData)</code></td>
+<td>Bool</td>
+<td>Updates customData (string) for the marker at given frameId position. CustomData is not exposed via UI and is useful for scripting developer to attach any user specific data to markers.</td>
+</tr>
+<tr>
+<td><code>GetMarkerCustomData(frameId)</code></td>
+<td>string</td>
+<td>Returns customData string for the marker at given frameId position.</td>
+</tr>
+<tr>
+<td><code>DeleteMarkersByColor(color)</code></td>
+<td>Bool</td>
+<td>Deletes all timeline markers of the specified color. An <code>All</code> argument is supported and deletes all timeline markers.</td>
+</tr>
+<tr>
+<td><code>DeleteMarkerAtFrame(frameNum)</code></td>
+<td>Bool</td>
+<td>Deletes the timeline marker at the given frame number.</td>
+</tr>
+<tr>
+<td><code>DeleteMarkerByCustomData(customData)</code></td>
+<td>Bool</td>
+<td>Delete first matching marker with specified customData.</td>
+</tr>
+<tr>
+<td><code>GetCurrentTimecode()</code></td>
+<td>string</td>
+<td>Returns a string timecode representation for the current playhead position, while on Cut, Edit, Color, Fairlight and Deliver pages.</td>
+</tr>
+<tr>
+<td><code>SetCurrentTimecode(timecode)</code></td>
+<td>Bool</td>
+<td>Sets current playhead position from input timecode for Cut, Edit, Color, Fairlight and Deliver pages.</td>
+</tr>
+<tr>
+<td><code>GetCurrentVideoItem()</code></td>
+<td>item</td>
+<td>Returns the current video timeline item.</td>
+</tr>
+<tr>
+<td><code>GetCurrentClipThumbnailImage()</code></td>
+<td>{thumbnailData}</td>
+<td>Returns a dict (keys <code>width</code>, <code>height</code>, <code>format</code> and <code>data</code>) with data containing raw thumbnail image data (RGB 8-bit image data encoded in base64 format) for current media in the Color Page.<br>An example of how to retrieve and interpret thumbnails is provided in 6_get_current_media_thumbnail.py in the Examples folder.</td>
+</tr>
+<tr>
+<td><code>GetTrackName(trackType, trackIndex)</code></td>
+<td>string</td>
+<td>Returns the track name for track indicated by trackType (<code>audio</code>, <code>video</code> or <code>subtitle</code>) and index. 1 &lt;= trackIndex &lt;= GetTrackCount(trackType).</td>
+</tr>
+<tr>
+<td><code>SetTrackName(trackType, trackIndex, name)</code></td>
+<td>Bool</td>
+<td>Sets the track name (string) for track indicated by trackType (<code>audio</code>, <code>video</code> or <code>subtitle</code>) and index. 1 &lt;= trackIndex &lt;= GetTrackCount(trackType).</td>
+</tr>
+<tr>
+<td><code>DuplicateTimeline(timelineName)</code></td>
+<td>timeline</td>
+<td>Duplicates the timeline and returns the created timeline, with the (optional) timelineName, on success.</td>
+</tr>
+<tr>
+<td><code>CreateCompoundClip([timelineItems], {clipInfo})</code></td>
+<td>timelineItem</td>
+<td>Creates a compound clip of input timeline items with an optional clipInfo map: {<code>startTimecode</code> : <code>00:00:00:00</code>, <code>name</code> : "Compound Clip 1"}. It returns the created timeline item.</td>
+</tr>
+<tr>
+<td><code>CreateFusionClip([timelineItems])</code></td>
+<td>timelineItem</td>
+<td>Creates a Fusion clip of input timeline items. It returns the created timeline item.</td>
+</tr>
+<tr>
+<td><code>ImportIntoTimeline(filePath, {importOptions})</code></td>
+<td>Bool</td>
+<td>Imports timeline items from an AAF file and optional importOptions dict into the timeline, with support for the keys:<br><code>autoImportSourceClipsIntoMediaPool</code>: Bool, specifies if source clips should be imported into media pool, True by default<br><code>ignoreFileExtensionsWhenMatching</code>: Bool, specifies if file extensions should be ignored when matching, False by default<br><code>linkToSourceCameraFiles</code>: Bool, specifies if link to source camera files should be enabled, False by default<br><code>useSizingInfo</code>: Bool, specifies if sizing information should be used, False by default<br><code>importMultiChannelAudioTracksAsLinkedGroups</code>: Bool, specifies if multi-channel audio tracks should be imported as linked groups, False by default<br><code>insertAdditionalTracks</code>: Bool, specifies if additional tracks should be inserted, True by default<br><code>insertWithOffset</code>: string, specifies insert with offset value in timecode format - defaults to "00:00:00:00", applicable if <code>insertAdditionalTracks</code> is False<br><code>sourceClipsPath</code>: string, specifies a filesystem path to search for source clips if the media is inaccessible in their original path and if <code>ignoreFileExtensionsWhenMatching</code> is True<br><code>sourceClipsFolders</code>: string, list of Media Pool folder objects to search for source clips if the media is not present in current folder</td>
+</tr>
+<tr>
+<td><code>Export(fileName, exportType, exportSubtype)</code></td>
+<td>Bool</td>
+<td>Exports timeline to <code>fileName</code> as per input exportType &amp; exportSubtype format.<br>Refer to section "Looking up timeline export properties" for information on the parameters.</td>
+</tr>
+<tr>
+<td><code>GetSetting(settingName)</code></td>
+<td>string</td>
+<td>Returns value of timeline setting (indicated by settingName : string). Check the section below for more information.</td>
+</tr>
+<tr>
+<td><code>SetSetting(settingName, settingValue)</code></td>
+<td>Bool</td>
+<td>Sets timeline setting (indicated by settingName : string) to the value (settingValue : string). Check the section below for more information.</td>
+</tr>
+<tr>
+<td><code>InsertGeneratorIntoTimeline(generatorName)</code></td>
+<td>TimelineItem</td>
+<td>Inserts a generator (indicated by generatorName : string) into the timeline.</td>
+</tr>
+<tr>
+<td><code>InsertFusionGeneratorIntoTimeline(generatorName)</code></td>
+<td>TimelineItem</td>
+<td>Inserts a Fusion generator (indicated by generatorName : string) into the timeline.</td>
+</tr>
+<tr>
+<td><code>InsertFusionCompositionIntoTimeline()</code></td>
+<td>TimelineItem</td>
+<td>Inserts a Fusion composition into the timeline.</td>
+</tr>
+<tr>
+<td><code>InsertOFXGeneratorIntoTimeline(generatorName)</code></td>
+<td>TimelineItem</td>
+<td>Inserts an OFX generator (indicated by generatorName : string) into the timeline.</td>
+</tr>
+<tr>
+<td><code>InsertTitleIntoTimeline(titleName)</code></td>
+<td>TimelineItem</td>
+<td>Inserts a title (indicated by titleName : string) into the timeline.</td>
+</tr>
+<tr>
+<td><code>InsertFusionTitleIntoTimeline(titleName)</code></td>
+<td>TimelineItem</td>
+<td>Inserts a Fusion title (indicated by titleName : string) into the timeline.</td>
+</tr>
+<tr>
+<td><code>GrabStill()</code></td>
+<td>galleryStill</td>
+<td>Grabs still from the current video clip. Returns a GalleryStill object.</td>
+</tr>
+<tr>
+<td><code>GrabAllStills(stillFrameSource)</code></td>
+<td>[galleryStill]</td>
+<td>Grabs stills from all the clips of the timeline at <code>stillFrameSource</code> (1 - First frame, 2 - Middle frame). Returns the list of GalleryStill objects.</td>
+</tr>
+<tr>
+<td><code>GetUniqueId()</code></td>
+<td>string</td>
+<td>Returns a unique ID for the timeline</td>
+</tr>
+<tr>
+<td><code>CreateSubtitlesFromAudio({autoCaptionSettings})</code></td>
+<td>Bool</td>
+<td>Creates subtitles from audio for the timeline.<br>Takes in optional dictionary {autoCaptionSettings}. Check 'Auto Caption Settings' subsection below for more information.<br>Returns True on success, False otherwise.</td>
+</tr>
+<tr>
+<td><code>DetectSceneCuts()</code></td>
+<td>Bool</td>
+<td>Detects and makes scene cuts along the timeline. Returns True if successful, False otherwise.</td>
+</tr>
+<tr>
+<td><code>ConvertTimelineToStereo()</code></td>
+<td>Bool</td>
+<td>Converts timeline to stereo. Returns True if successful; False otherwise.</td>
+</tr>
+<tr>
+<td><code>GetNodeGraph()</code></td>
+<td>Graph</td>
+<td>Returns the timeline's node graph object.</td>
+</tr>
+<tr>
+<td><code>AnalyzeDolbyVision([timelineItems]=[], analysisType=NONE)</code></td>
+<td>Bool</td>
+<td>Analyzes Dolby Vision on clips present on the timeline. Returns True if analysis start is successful; False otherwise.<br>if [timelineItems] is empty, analysis performed on all items. Else, analysis performed on [timelineItems] only.<br>set analysisType to resolve.DLB_BLEND_SHOTS for blend setting</td>
+</tr>
+<tr>
+<td><code>GetMediaPoolItem()</code></td>
+<td>MediaPoolItem</td>
+<td>Returns the media pool item corresponding to the timeline</td>
+</tr>
+<tr>
+<td><code>GetMarkInOut()</code></td>
+<td>{mark}</td>
+<td>Returns dict of in/out marks set (keys omitted if not set), example:<br>{<code>video</code>: {<code>in</code>: 0, <code>out</code>: 134}, <code>audio</code>: {<code>in</code>: 0, <code>out</code>: 134}}</td>
+</tr>
+<tr>
+<td><code>SetMarkInOut(in, out, type=</code>all<code>)</code></td>
+<td>Bool</td>
+<td>Sets mark in/out of type <code>video</code>, <code>audio</code> or <code>all</code> (default).</td>
+</tr>
+<tr>
+<td><code>ClearMarkInOut(type=</code>all<code>)</code></td>
+<td>Bool</td>
+<td>Clears mark in/out of type <code>video</code>, <code>audio</code> or <code>all</code> (default).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="timelineitem">TimelineItem</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetName()</code></td>
+<td>string</td>
+<td>Returns the item name.</td>
+</tr>
+<tr>
+<td><code>GetDuration(subframe_precision)</code></td>
+<td>int/float</td>
+<td>Returns the item duration. Returns fractional frames if subframe_precision is True</td>
+</tr>
+<tr>
+<td><code>GetEnd(subframe_precision)</code></td>
+<td>int/float</td>
+<td>Returns the end frame position on the timeline. Returns fractional frames if subframe_precision is True</td>
+</tr>
+<tr>
+<td><code>GetSourceEndFrame()</code></td>
+<td>int</td>
+<td>Returns the end frame position of the media pool clip in the timeline clip.</td>
+</tr>
+<tr>
+<td><code>GetSourceEndTime()</code></td>
+<td>float</td>
+<td>Returns the end time position of the media pool clip in the timeline clip.</td>
+</tr>
+<tr>
+<td><code>GetFusionCompCount()</code></td>
+<td>int</td>
+<td>Returns number of Fusion compositions associated with the timeline item.</td>
+</tr>
+<tr>
+<td><code>GetFusionCompByIndex(compIndex)</code></td>
+<td>fusionComp</td>
+<td>Returns the Fusion composition object based on given index. 1 &lt;= compIndex &lt;= timelineItem.GetFusionCompCount()</td>
+</tr>
+<tr>
+<td><code>GetFusionCompNameList()</code></td>
+<td>[names...]</td>
+<td>Returns a list of Fusion composition names associated with the timeline item.</td>
+</tr>
+<tr>
+<td><code>GetFusionCompByName(compName)</code></td>
+<td>fusionComp</td>
+<td>Returns the Fusion composition object based on given name.</td>
+</tr>
+<tr>
+<td><code>GetLeftOffset(subframe_precision)</code></td>
+<td>int/float</td>
+<td>Returns the maximum extension by frame for clip from left side. Returns fractional frames if subframe_precision is True</td>
+</tr>
+<tr>
+<td><code>GetRightOffset(subframe_precision)</code></td>
+<td>int/float</td>
+<td>Returns the maximum extension by frame for clip from right side. Returns fractional frames if subframe_precision is True</td>
+</tr>
+<tr>
+<td><code>GetStart(subframe_precision)</code></td>
+<td>int/float</td>
+<td>Returns the start frame position on the timeline. Returns fractional frames if subframe_precision is True</td>
+</tr>
+<tr>
+<td><code>GetSourceStartFrame()</code></td>
+<td>int</td>
+<td>Returns the start frame position of the media pool clip in the timeline clip.</td>
+</tr>
+<tr>
+<td><code>GetSourceStartTime()</code></td>
+<td>float</td>
+<td>Returns the start time position of the media pool clip in the timeline clip.</td>
+</tr>
+<tr>
+<td><code>SetProperty(propertyKey, propertyValue)</code></td>
+<td>Bool</td>
+<td>Sets the value of property <code>propertyKey</code> to value <code>propertyValue</code><br>Refer to "Looking up Timeline item properties" for more information</td>
+</tr>
+<tr>
+<td><code>GetProperty(propertyKey)</code></td>
+<td>int/[key:value]</td>
+<td>returns the value of the specified key<br>if no key is specified, the method returns a dictionary(python) or table(lua) for all supported keys</td>
+</tr>
+<tr>
+<td><code>AddMarker(frameId, color, name, note, duration, customData)</code></td>
+<td>Bool</td>
+<td>Creates a new marker at given frameId position and with given marker information. <code>customData</code> is optional and helps to attach user specific data to the marker.</td>
+</tr>
+<tr>
+<td><code>GetMarkers()</code></td>
+<td>{markers...}</td>
+<td>Returns a dict (frameId -&gt; {information}) of all markers and dicts with their information.<br>Example: a value of {96.0: {<code>color</code>: <code>Green</code>, <code>duration</code>: 1.0, <code>note</code>: <code>, `name`: 'Marker 1', `customData`:</code>}, ...} indicates a single green marker at clip offset 96</td>
+</tr>
+<tr>
+<td><code>GetMarkerByCustomData(customData)</code></td>
+<td>{markers...}</td>
+<td>Returns marker {information} for the first matching marker with specified customData.</td>
+</tr>
+<tr>
+<td><code>UpdateMarkerCustomData(frameId, customData)</code></td>
+<td>Bool</td>
+<td>Updates customData (string) for the marker at given frameId position. CustomData is not exposed via UI and is useful for scripting developer to attach any user specific data to markers.</td>
+</tr>
+<tr>
+<td><code>GetMarkerCustomData(frameId)</code></td>
+<td>string</td>
+<td>Returns customData string for the marker at given frameId position.</td>
+</tr>
+<tr>
+<td><code>DeleteMarkersByColor(color)</code></td>
+<td>Bool</td>
+<td>Delete all markers of the specified color from the timeline item. <code>All</code> as argument deletes all color markers.</td>
+</tr>
+<tr>
+<td><code>DeleteMarkerAtFrame(frameNum)</code></td>
+<td>Bool</td>
+<td>Delete marker at frame number from the timeline item.</td>
+</tr>
+<tr>
+<td><code>DeleteMarkerByCustomData(customData)</code></td>
+<td>Bool</td>
+<td>Delete first matching marker with specified customData.</td>
+</tr>
+<tr>
+<td><code>AddFlag(color)</code></td>
+<td>Bool</td>
+<td>Adds a flag with given color (string).</td>
+</tr>
+<tr>
+<td><code>GetFlagList()</code></td>
+<td>[colors...]</td>
+<td>Returns a list of flag colors assigned to the item.</td>
+</tr>
+<tr>
+<td><code>ClearFlags(color)</code></td>
+<td>Bool</td>
+<td>Clear flags of the specified color. An <code>All</code> argument is supported to clear all flags.</td>
+</tr>
+<tr>
+<td><code>GetClipColor()</code></td>
+<td>string</td>
+<td>Returns the item color as a string.</td>
+</tr>
+<tr>
+<td><code>SetClipColor(colorName)</code></td>
+<td>Bool</td>
+<td>Sets the item color based on the colorName (string).</td>
+</tr>
+<tr>
+<td><code>ClearClipColor()</code></td>
+<td>Bool</td>
+<td>Clears the item color.</td>
+</tr>
+<tr>
+<td><code>AddFusionComp()</code></td>
+<td>fusionComp</td>
+<td>Adds a new Fusion composition associated with the timeline item.</td>
+</tr>
+<tr>
+<td><code>ImportFusionComp(path)</code></td>
+<td>fusionComp</td>
+<td>Imports a Fusion composition from given file path by creating and adding a new composition for the item.</td>
+</tr>
+<tr>
+<td><code>ExportFusionComp(path, compIndex)</code></td>
+<td>Bool</td>
+<td>Exports the Fusion composition based on given index to the path provided.</td>
+</tr>
+<tr>
+<td><code>DeleteFusionCompByName(compName)</code></td>
+<td>Bool</td>
+<td>Deletes the named Fusion composition.</td>
+</tr>
+<tr>
+<td><code>LoadFusionCompByName(compName)</code></td>
+<td>fusionComp</td>
+<td>Loads the named Fusion composition as the active composition.</td>
+</tr>
+<tr>
+<td><code>RenameFusionCompByName(oldName, newName)</code></td>
+<td>Bool</td>
+<td>Renames the Fusion composition identified by oldName.</td>
+</tr>
+<tr>
+<td><code>AddVersion(versionName, versionType)</code></td>
+<td>Bool</td>
+<td>Adds a new color version for a video clip based on versionType (0 - local, 1 - remote).</td>
+</tr>
+<tr>
+<td><code>GetCurrentVersion()</code></td>
+<td>{versionName...}</td>
+<td>Returns the current version of the video clip. The returned value will have the keys versionName and versionType(0 - local, 1 - remote).</td>
+</tr>
+<tr>
+<td><code>DeleteVersionByName(versionName, versionType)</code></td>
+<td>Bool</td>
+<td>Deletes a color version by name and versionType (0 - local, 1 - remote).</td>
+</tr>
+<tr>
+<td><code>LoadVersionByName(versionName, versionType)</code></td>
+<td>Bool</td>
+<td>Loads a named color version as the active version. versionType: 0 - local, 1 - remote.</td>
+</tr>
+<tr>
+<td><code>RenameVersionByName(oldName, newName, versionType</code></td>
+<td>Bool</td>
+<td>Renames the color version identified by oldName and versionType (0 - local, 1 - remote).</td>
+</tr>
+<tr>
+<td><code>GetVersionNameList(versionType)</code></td>
+<td>[names...]</td>
+<td>Returns a list of all color versions for the given versionType (0 - local, 1 - remote).</td>
+</tr>
+<tr>
+<td><code>GetMediaPoolItem()</code></td>
+<td>MediaPoolItem</td>
+<td>Returns the media pool item corresponding to the timeline item if one exists.</td>
+</tr>
+<tr>
+<td><code>GetStereoConvergenceValues()</code></td>
+<td>{keyframes...}</td>
+<td>Returns a dict (offset -&gt; value) of keyframe offsets and respective convergence values.</td>
+</tr>
+<tr>
+<td><code>GetStereoLeftFloatingWindowParams()</code></td>
+<td>{keyframes...}</td>
+<td>For the LEFT eye -&gt; returns a dict (offset -&gt; dict) of keyframe offsets and respective floating window params. Value at particular offset includes the left, right, top and bottom floating window values.</td>
+</tr>
+<tr>
+<td><code>GetStereoRightFloatingWindowParams()</code></td>
+<td>{keyframes...}</td>
+<td>For the RIGHT eye -&gt; returns a dict (offset -&gt; dict) of keyframe offsets and respective floating window params. Value at particular offset includes the left, right, top and bottom floating window values.</td>
+</tr>
+<tr>
+<td><code>SetCDL([CDL map])</code></td>
+<td>Bool</td>
+<td>Keys of map are: <code>NodeIndex</code>, <code>Slope</code>, <code>Offset</code>, <code>Power</code>, <code>Saturation</code>, where 1 &lt;= NodeIndex &lt;= total number of nodes.<br>Example python code - SetCDL({<code>NodeIndex</code> : <code>1</code>, <code>Slope</code> : "0.5 0.4 0.2", <code>Offset</code> : "0.4 0.3 0.2", <code>Power</code> : "0.6 0.7 0.8", <code>Saturation</code> : <code>0.65</code>})</td>
+</tr>
+<tr>
+<td><code>AddTake(mediaPoolItem, startFrame, endFrame)</code></td>
+<td>Bool</td>
+<td>Adds mediaPoolItem as a new take. Initializes a take selector for the timeline item if needed. By default, the full clip extents is added. startFrame (int) and endFrame (int) are optional arguments used to specify the extents.</td>
+</tr>
+<tr>
+<td><code>GetSelectedTakeIndex()</code></td>
+<td>int</td>
+<td>Returns the index of the currently selected take, or 0 if the clip is not a take selector.</td>
+</tr>
+<tr>
+<td><code>GetTakesCount()</code></td>
+<td>int</td>
+<td>Returns the number of takes in take selector, or 0 if the clip is not a take selector.</td>
+</tr>
+<tr>
+<td><code>GetTakeByIndex(idx)</code></td>
+<td>{takeInfo...}</td>
+<td>Returns a dict (keys <code>startFrame</code>, <code>endFrame</code> and <code>mediaPoolItem</code>) with take info for specified index.</td>
+</tr>
+<tr>
+<td><code>DeleteTakeByIndex(idx)</code></td>
+<td>Bool</td>
+<td>Deletes a take by index, 1 &lt;= idx &lt;= number of takes.</td>
+</tr>
+<tr>
+<td><code>SelectTakeByIndex(idx)</code></td>
+<td>Bool</td>
+<td>Selects a take by index, 1 &lt;= idx &lt;= number of takes.</td>
+</tr>
+<tr>
+<td><code>FinalizeTake()</code></td>
+<td>Bool</td>
+<td>Finalizes take selection.</td>
+</tr>
+<tr>
+<td><code>CopyGrades([tgtTimelineItems])</code></td>
+<td>Bool</td>
+<td>Copies the current node stack layer grade to the same layer for each item in tgtTimelineItems. Returns True if successful.</td>
+</tr>
+<tr>
+<td><code>SetClipEnabled(Bool)</code></td>
+<td>Bool</td>
+<td>Sets clip enabled based on argument.</td>
+</tr>
+<tr>
+<td><code>GetClipEnabled()</code></td>
+<td>Bool</td>
+<td>Gets clip enabled status.</td>
+</tr>
+<tr>
+<td><code>UpdateSidecar()</code></td>
+<td>Bool</td>
+<td>Updates sidecar file for BRAW clips or RMD file for R3D clips.</td>
+</tr>
+<tr>
+<td><code>GetUniqueId()</code></td>
+<td>string</td>
+<td>Returns a unique ID for the timeline item</td>
+</tr>
+<tr>
+<td><code>LoadBurnInPreset(presetName)</code></td>
+<td>Bool</td>
+<td>Loads user defined data burn in preset for clip when supplied presetName (string). Returns true if successful.</td>
+</tr>
+<tr>
+<td><code>CreateMagicMask(mode)</code></td>
+<td>Bool</td>
+<td>Returns True if magic mask was created successfully, False otherwise. mode can <code>F</code> (forward), <code>B</code> (backward), or <code>BI</code> (bidirection)</td>
+</tr>
+<tr>
+<td><code>RegenerateMagicMask()</code></td>
+<td>Bool</td>
+<td>Returns True if magic mask was regenerated successfully, False otherwise.</td>
+</tr>
+<tr>
+<td><code>Stabilize()</code></td>
+<td>Bool</td>
+<td>Returns True if stabilization was successful, False otherwise</td>
+</tr>
+<tr>
+<td><code>SmartReframe()</code></td>
+<td>Bool</td>
+<td>Performs Smart Reframe. Returns True if successful, False otherwise.</td>
+</tr>
+<tr>
+<td><code>GetNodeGraph(layerIdx)</code></td>
+<td>Graph</td>
+<td>Returns the clip's node graph object at layerIdx (int, optional). Returns the first layer if layerIdx is skipped. 1 &lt;= layerIdx &lt;= project.GetSetting(<code>nodeStackLayers</code>).</td>
+</tr>
+<tr>
+<td><code>GetColorGroup()</code></td>
+<td>ColorGroup</td>
+<td>Returns the clip's color group if one exists.</td>
+</tr>
+<tr>
+<td><code>AssignToColorGroup(ColorGroup)</code></td>
+<td>Bool</td>
+<td>Returns True if TiItem to successfully assigned to given ColorGroup. ColorGroup must be an existing group in the current project.</td>
+</tr>
+<tr>
+<td><code>RemoveFromColorGroup()</code></td>
+<td>Bool</td>
+<td>Returns True if the TiItem is successfully removed from the ColorGroup it is in.</td>
+</tr>
+<tr>
+<td><code>ExportLUT(exportType, path)</code></td>
+<td>Bool</td>
+<td>Exports LUTs from tiItem referring to value passed in <code>exportType</code> (enum) for LUT size. Refer to. 'ExportLUT notes' section for possible values.<br>Saves generated LUT in the provided <code>path</code> (string). <code>path</code> should include the intended file name.<br>If an empty or incorrect extension is provided, the appropriate extension (.cube/.vlt) will be appended at the end of the path.</td>
+</tr>
+<tr>
+<td><code>GetLinkedItems()</code></td>
+<td>[TimelineItems]</td>
+<td>Returns a list of linked timeline items.</td>
+</tr>
+<tr>
+<td><code>GetTrackTypeAndIndex()</code></td>
+<td>[trackType, trackIndex]</td>
+<td>Returns a list of two values that correspond to the TimelineItem's trackType (string) and trackIndex (int) respectively.<br>trackType is one of {<code>audio</code>, <code>video</code>, <code>subtitle</code>}<br>1 &lt;= trackIndex &lt;= Timeline.GetTrackCount(trackType)</td>
+</tr>
+<tr>
+<td><code>GetSourceAudioChannelMapping()</code></td>
+<td>json formatted string</td>
+<td>Returns a string with TimelineItem's audio mapping information. Check 'Audio Mapping' section below for more information.</td>
+</tr>
+<tr>
+<td><code>GetIsColorOutputCacheEnabled()</code></td>
+<td>cache_value</td>
+<td>Returns if the cache corresponding to cache_type is enabled</td>
+</tr>
+<tr>
+<td><code>GetIsFusionOutputCacheEnabled()</code></td>
+<td>cache_value</td>
+<td>Returns if the cache corresponding to cache_type is enabled (or auto)</td>
+</tr>
+<tr>
+<td><code>SetColorOutputCache(cache_value)</code></td>
+<td>Bool</td>
+<td>Sets caching to enabled or disabled. Equivalent to clip context menu action 'Render Cache Color Output'.</td>
+</tr>
+<tr>
+<td><code>SetFusionOutputCache(cache_value)</code></td>
+<td>Bool</td>
+<td>Sets caching to auto, enabled or disabled. Equivalent to clip context menu action 'Render Cache Fusion Output'.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gallery">Gallery</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetAlbumName(galleryStillAlbum)</code></td>
+<td>string</td>
+<td>Returns the name of the GalleryStillAlbum object <code>galleryStillAlbum</code>.</td>
+</tr>
+<tr>
+<td><code>SetAlbumName(galleryStillAlbum, albumName)</code></td>
+<td>Bool</td>
+<td>Sets the name of the GalleryStillAlbum object <code>galleryStillAlbum</code> to <code>albumName</code>.</td>
+</tr>
+<tr>
+<td><code>GetCurrentStillAlbum()</code></td>
+<td>galleryStillAlbum</td>
+<td>Returns current album as a GalleryStillAlbum object.</td>
+</tr>
+<tr>
+<td><code>SetCurrentStillAlbum(galleryStillAlbum)</code></td>
+<td>Bool</td>
+<td>Sets current album to GalleryStillAlbum object <code>galleryStillAlbum</code>.</td>
+</tr>
+<tr>
+<td><code>GetGalleryStillAlbums()</code></td>
+<td>[galleryStillAlbum]</td>
+<td>Returns the gallery Still albums as a list of GalleryStillAlbum objects.</td>
+</tr>
+<tr>
+<td><code>GetGalleryPowerGradeAlbums()</code></td>
+<td>[galleryStillAlbum]</td>
+<td>Returns the gallery PowerGrade albums as a list of GalleryStillAlbum objects.</td>
+</tr>
+<tr>
+<td><code>CreateGalleryStillAlbum()</code></td>
+<td>galleryStillAlbum</td>
+<td>Returns a newly created Still album (GalleryStillAlbum object), or None if not successful.</td>
+</tr>
+<tr>
+<td><code>CreateGalleryPowerGradeAlbum()</code></td>
+<td>galleryStillAlbum</td>
+<td>Returns a newly created PowerGrade album (GalleryStillAlbum object), or None if not successful.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gallerystillalbum">GalleryStillAlbum</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetStills()</code></td>
+<td>[galleryStill]</td>
+<td>Returns the list of GalleryStill objects in the album.</td>
+</tr>
+<tr>
+<td><code>GetLabel(galleryStill)</code></td>
+<td>string</td>
+<td>Returns the label of the galleryStill.</td>
+</tr>
+<tr>
+<td><code>SetLabel(galleryStill, label)</code></td>
+<td>Bool</td>
+<td>Sets the new <code>label</code> to GalleryStill object <code>galleryStill</code>.</td>
+</tr>
+<tr>
+<td><code>ImportStills([filePaths])</code></td>
+<td>Bool</td>
+<td>Imports GalleryStill from each filePath in [filePaths] list. True if at least one still is imported successfully. False otherwise.</td>
+</tr>
+<tr>
+<td><code>ExportStills([galleryStill], folderPath, filePrefix, format)</code></td>
+<td>Bool</td>
+<td>Exports list of GalleryStill objects '[galleryStill]' to directory <code>folderPath</code>, with filename prefix <code>filePrefix</code>, using file format <code>format</code> (supported formats: dpx, cin, tif, jpg, png, ppm, bmp, xpm, drx).</td>
+</tr>
+<tr>
+<td><code>DeleteStills([galleryStill])</code></td>
+<td>Bool</td>
+<td>Deletes specified list of GalleryStill objects '[galleryStill]'.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="gallerystill">GalleryStill</h3>
+<p>This class does not provide any API functions but the object type is used by functions in other classes.</p>
+<h3 id="graph">Graph</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetNumNodes()</code></td>
+<td>int</td>
+<td>Returns the number of nodes in the graph</td>
+</tr>
+<tr>
+<td><code>SetLUT(nodeIndex, lutPath)</code></td>
+<td>Bool</td>
+<td>Sets LUT on the node mapping the node index provided, 1 &lt;= nodeIndex &lt;= self.GetNumNodes().<br>The lutPath can be an absolute path, or a relative path (based off custom LUT paths or the master LUT path).<br>The operation is successful for valid lut paths that Resolve has already discovered (see Project.RefreshLUTList).</td>
+</tr>
+<tr>
+<td><code>GetLUT(nodeIndex)</code></td>
+<td>String</td>
+<td>Gets relative LUT path based on the node index provided, 1 &lt;= nodeIndex &lt;= total number of nodes.</td>
+</tr>
+<tr>
+<td><code>SetNodeCacheMode(nodeIndex, cache_value)</code></td>
+<td>Bool</td>
+<td>Sets the cache mode type on the node mapping the node index provided. Refer to "Cache Mode" section below to find the possible values of cache_value.</td>
+</tr>
+<tr>
+<td><code>GetNodeCacheMode(nodeIndex)</code></td>
+<td>cache_value</td>
+<td>Returns the cache mode type on the node mapping the node index provided.</td>
+</tr>
+<tr>
+<td><code>GetNodeLabel(nodeIndex)</code></td>
+<td>string</td>
+<td>Returns the label of the node at nodeIndex.</td>
+</tr>
+<tr>
+<td><code>GetToolsInNode(nodeIndex)</code></td>
+<td>[toolsList]</td>
+<td>Returns toolsList (list of strings) of the tools used in the node indicated by given nodeIndex (int).</td>
+</tr>
+<tr>
+<td><code>SetNodeEnabled(nodeIndex, isEnabled)</code></td>
+<td>Bool</td>
+<td>Sets the node at the given nodeIndex (int) to isEnabled (bool).<br>1 &lt;= nodeIndex &lt;= self.GetNumNodes().</td>
+</tr>
+<tr>
+<td><code>ApplyGradeFromDRX(path, gradeMode)</code></td>
+<td>Bool</td>
+<td>Loads a still from given file path (string) and applies grade to graph with gradeMode (int): 0 - “No keyframes”, 1 - “Source Timecode aligned”, 2 - “Start Frames aligned”.</td>
+</tr>
+<tr>
+<td><code>ApplyArriCdlLut()</code></td>
+<td>Bool</td>
+<td>Applies ARRI CDL and LUT. Returns True if successful, False otherwise.</td>
+</tr>
+<tr>
+<td><code>ResetAllGrades()</code></td>
+<td>Bool</td>
+<td>Returns True if all grades were reset successfully, False otherwise.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="colorgroup">ColorGroup</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetName()</code></td>
+<td>String</td>
+<td>Returns the name (string) of the ColorGroup.</td>
+</tr>
+<tr>
+<td><code>SetName(groupName)</code></td>
+<td>Bool</td>
+<td>Renames ColorGroup to groupName (string).</td>
+</tr>
+<tr>
+<td><code>GetClipsInTimeline(Timeline=CurrTimeline)</code></td>
+<td>[TimelineItem]</td>
+<td>Returns a list of TimelineItem that are in colorGroup in the given Timeline. Timeline is Current Timeline by default.</td>
+</tr>
+<tr>
+<td><code>GetPreClipNodeGraph()</code></td>
+<td>Graph</td>
+<td>Returns the ColorGroup Pre-clip graph.</td>
+</tr>
+<tr>
+<td><code>GetPostClipNodeGraph()</code></td>
+<td>Graph</td>
+<td>Returns the ColorGroup Post-clip graph.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="list-and-dict-data-structures">List and Dict Data Structures</h2>
+<p>Beside primitive data types, Resolve's Python API mainly uses list and dict data structures. Lists are denoted by [ ... ] and dicts are denoted by { ... } above.
+As Lua does not support list and dict data structures, the Lua API implements <code>list</code> as a table with indices, e.g. { [1] = listValue1, [2] = listValue2, ... }.
+Similarly the Lua API implements <code>dict</code> as a table with the dictionary key as first element, e.g. { [dictKey1] = dictValue1, [dictKey2] = dictValue2, ... }.</p>
+<h2 id="keyframe-mode-information">Keyframe Mode information</h2>
+<p>This section covers additional notes for the functions <code>Resolve.GetKeyframeMode()</code> and Resolve.SetKeyframeMode(keyframeMode).</p>
+<p><code>keyframeMode</code> can be one of the following enums:</p>
+<pre><code>- `resolve.KEYFRAME_MODE_ALL`     == 0
+- `resolve.KEYFRAME_MODE_COLOR`   == 1
+- `resolve.KEYFRAME_MODE_SIZING`  == 2
+</code></pre>
+<p>Integer values returned by <code>Resolve.GetKeyframeMode()</code> will correspond to the enums above.</p>
+<h2 id="cache-mode-information">Cache Mode information</h2>
+<p>This section covers additional notes for the functions Graph:GetNodeCacheMode(nodeIndex) and Graph:SetNodeCacheMode(nodeIndex, cache_value).</p>
+<p>cache_value is an enumerated integer with one of the following values:</p>
+<pre><code>- `resolve.CACHE_AUTO_ENABLED`  = -1
+- `resolve.CACHE_DISABLED`      =  0
+- `resolve.CACHE_ENABLED`       =  1
+</code></pre>
+<p>Integer values returned by Graph:GetNodeCacheMode(nodeIndex) will correspond to the enums above.</p>
+<h2 id="cloud-projects-settings">Cloud Projects Settings</h2>
+<p>This section covers additional notes for the functions <code>ProjectManager:LoadCloudProject</code>, <code>ProjectManager:CreateCloudProject</code>, <code>ProjectManager:ImportCloudProject</code>, and <code>ProjectManager:RestoreCloudProject</code></p>
+<p>All four functions <code>ProjectManager:CreateCloudProject</code>, <code>ProjectManager:LoadCloudProject</code>, <code>ProjectManager:ImportCloudProject</code>, and <code>ProjectManager:RestoreCloudProject</code> take in a {cloudSettings} dict, that have the following keys:</p>
+<ul>
+<li><code>resolve.CLOUD_SETTING_PROJECT_NAME</code>: String, [`` by default]</li>
+<li><code>resolve.CLOUD_SETTING_PROJECT_MEDIA_PATH</code>: String, [`` by default]</li>
+<li><code>resolve.CLOUD_SETTING_IS_COLLAB</code>: Bool, [False by default]</li>
+<li><code>resolve.CLOUD_SETTING_SYNC_MODE</code>: syncMode (see below), [<code>resolve.CLOUD_SYNC_PROXY_ONLY</code> by default]</li>
+<li><code>resolve.CLOUD_SETTING_IS_CAMERA_ACCESS</code>: Bool [False by default]</li>
+</ul>
+<p>Note that <code>ProjectManager:LoadCloudProject</code> only honour the following keys: <code>resolve.CLOUD_SETTING_PROJECT_NAME</code>, <code>resolve.CLOUD_SETTING_PROJECT_MEDIA_PATH</code> and <code>resolve.CLOUD_SETTING_SYNC_MODE</code>.
+Only 1st load on a given system will honour all 3 settings. Subsequent loads will honour only <code>resolve.CLOUD_SETTING_PROJECT_NAME</code></p>
+<p>Where syncMode is one of the following values:</p>
+<ul>
+<li><code>resolve.CLOUD_SYNC_NONE</code>,</li>
+<li><code>resolve.CLOUD_SYNC_PROXY_ONLY</code>,</li>
+<li><code>resolve.CLOUD_SYNC_PROXY_AND_ORIG</code></li>
+</ul>
+<p>All four functions <code>ProjectManager:CreateCloudProject</code>, <code>ProjectManager:LoadCloudProject</code>, <code>ProjectManager:ImportCloudProject</code>, and <code>ProjectManager:RestoreCloudProject</code> require <code>resolve.PROJECT_MEDIA_PATH</code> to be defined.
+<code>ProjectManager:LoadCloudProject</code> and <code>ProjectManager:CreateCloudProject</code> also requires <code>resolve.PROJECT_NAME</code> to be defined.</p>
+<h2 id="audio-sync-settings">Audio Sync Settings</h2>
+<p>This section covers additional notes for the functions <code>MediaPool:AutoSyncAudio</code>.</p>
+<p>AutoSyncAudio takes in a {audioSyncSettings} dict, that has the following keys:</p>
+<ul>
+<li><code>resolve.AUDIO_SYNC_MODE</code>:                  audioSyncMode (see below),  [<code>resolve.AUDIO_SYNC_TIMECODE</code> by default]</li>
+<li><code>resolve.AUDIO_SYNC_CHANNEL_NUMBER</code>:        channelNumber (see below)   [1 by default]</li>
+<li><code>resolve.AUDIO_SYNC_RETAIN_EMBEDDED_AUDIO</code>: Bool,                       [False by default]</li>
+<li><code>resolve.AUDIO_SYNC_RETAIN_VIDEO_METADATA</code>: Bool,                       [False by default]</li>
+</ul>
+<p>audioSyncMode can be one of the following:</p>
+<ul>
+<li><code>resolve.AUDIO_SYNC_WAVEFORM</code></li>
+<li><code>resolve.AUDIO_SYNC_TIMECODE</code></li>
+</ul>
+<p>With AUDIO_SYNC_WAVEFORM mode, channelNumber is used to determine channel offset for comparison.
+channelNumber can be one of the following:</p>
+<ul>
+<li><code>resolve.AUDIO_SYNC_CHANNEL_AUTOMATIC</code>    = -1</li>
+<li><code>resolve.AUDIO_SYNC_CHANNEL_MIX</code>          = -2</li>
+<li>an actual channel offset from input media for waveform comparison. 1 &lt;= channel offset &lt;= channelMax, where channelMax is the channel count of the audio clip in [MediaPoolItems] with the fewest channels.</li>
+</ul>
+<h2 id="looking-up-project-and-clip-properties">Looking up Project and Clip properties</h2>
+<p>This section covers additional notes for the functions <code>Project:GetSetting</code>, <code>Project:SetSetting</code>, <code>Timeline:GetSetting</code>, <code>Timeline:SetSetting</code>, <code>MediaPoolItem:GetClipProperty</code> and
+<code>MediaPoolItem:SetClipProperty</code>. These functions are used to get and set properties otherwise available to the user through the Project Settings and the Clip Attributes dialogs.</p>
+<p>The functions follow a key-value pair format, where each property is identified by a key (the settingName or propertyName parameter) and possesses a value (typically a text value). Keys and values are
+designed to be easily correlated with parameter names and values in the Resolve UI. Explicitly enumerated values for some parameters are listed below.</p>
+<p>Some properties may be read only - these include intrinsic clip properties like date created or sample rate, and properties that can be disabled in specific application contexts (e.g. custom colorspaces
+in an ACES workflow, or output sizing parameters when behavior is set to match timeline)</p>
+<p><strong>Getting values:</strong></p>
+<p>Invoke <code>Project:GetSetting</code>, <code>Timeline:GetSetting</code> or <code>MediaPoolItem:GetClipProperty</code> with the appropriate property key. To get a snapshot of all queryable properties (keys and values), you can call
+<code>Project:GetSetting</code>, <code>Timeline:GetSetting</code> or <code>MediaPoolItem:GetClipProperty</code> without parameters (or with a NoneType or a blank property key). Using specific keys to query individual properties will
+be faster. Note that getting a property using an invalid key will return a trivial result.</p>
+<p><strong>Setting values:</strong></p>
+<p>Invoke <code>Project:SetSetting</code>, <code>Timeline:SetSetting</code> or <code>MediaPoolItem:SetClipProperty</code> with the appropriate property key and a valid value. When setting a parameter, please check the return value to
+ensure the success of the operation. You can troubleshoot the validity of keys and values by setting the desired result from the UI and checking property snapshots before and after the change.</p>
+<p>The following Project properties have specifically enumerated values:</p>
+<p><code>superScale</code> - the property value is an enumerated integer between 0 and 4 with these meanings: 0=Auto, 1=no scaling, and 2, 3 and 4 represent the Super Scale multipliers 2x, 3x and 4x.
+               for super scale multiplier '2x Enhanced', exactly 4 arguments must be passed as outlined below. If less than 4 arguments are passed, it will default to 2x.
+Affects:</p>
+<p>• x = Project:GetSetting(<code>superScale</code>) and Project:SetSetting(<code>superScale</code>, x)
+• for '2x Enhanced' --&gt; Project:SetSetting(<code>superScale</code>, 2, sharpnessValue, noiseReductionValue), where sharpnessValue is a float in the range [0.0, 1.0] and noiseReductionValue is a float in the range [0.0, 1.0]</p>
+<p><code>timelineFrameRate</code> - the property value is one of the frame rates available to the user in project settings under "Timeline frame rate" option. Drop Frame can be configured for supported frame rates
+                      by appending the frame rate with "DF", e.g. "29.97 DF" will enable drop frame and "29.97" will disable drop frame
+Affects:</p>
+<p>• x = Project:GetSetting(<code>timelineFrameRate</code>) and Project:SetSetting(<code>timelineFrameRate</code>, x)</p>
+<p>The following Clip properties have specifically enumerated values:</p>
+<p>"Super Scale" - the property value is an enumerated integer between 1 and 4 with these meanings: 1=no scaling, and 2, 3 and 4 represent the Super Scale multipliers 2x, 3x and 4x.
+                for super scale multiplier '2x Enhanced', exactly 4 arguments must be passed as outlined below. If less than 4 arguments are passed, it will default to 2x.
+Affects:</p>
+<p>• x = MediaPoolItem:GetClipProperty('Super Scale') and MediaPoolItem:SetClipProperty('Super Scale', x)
+• for '2x Enhanced' --&gt; MediaPoolItem:SetClipProperty('Super Scale', 2, sharpnessValue, noiseReductionValue), where sharpnessValue is a float in the range [0.0, 1.0] and noiseReductionValue is a float in the range [0.0, 1.0]</p>
+<p>"Cloud Sync" = the property value is an enumerated integer that will correspond to one of the following enums:</p>
+<ul>
+<li><code>resolve.CLOUD_SYNC_DEFAULT</code>                == -1</li>
+<li><code>resolve.CLOUD_SYNC_DOWNLOAD_IN_QUEUE</code>      == 0</li>
+<li><code>resolve.CLOUD_SYNC_DOWNLOAD_IN_PROGRESS</code>   == 1</li>
+<li><code>resolve.CLOUD_SYNC_DOWNLOAD_SUCCESS</code>       == 2</li>
+<li><code>resolve.CLOUD_SYNC_DOWNLOAD_FAIL</code>          == 3</li>
+<li>
+<p><code>resolve.CLOUD_SYNC_DOWNLOAD_NOT_FOUND</code>     == 4</p>
+</li>
+<li>
+<p><code>resolve.CLOUD_SYNC_UPLOAD_IN_QUEUE</code>        == 5</p>
+</li>
+<li><code>resolve.CLOUD_SYNC_UPLOAD_IN_PROGRESS</code>     == 6</li>
+<li><code>resolve.CLOUD_SYNC_UPLOAD_SUCCESS</code>         == 7</li>
+<li><code>resolve.CLOUD_SYNC_UPLOAD_FAIL</code>            == 8</li>
+<li>
+<p><code>resolve.CLOUD_SYNC_UPLOAD_NOT_FOUND</code>       == 9</p>
+</li>
+<li>
+<p><code>resolve.CLOUD_SYNC_SUCCESS</code>                == 10</p>
+</li>
+</ul>
+<h2 id="audio-mapping">Audio Mapping</h2>
+<p>This section covers the output for <code>mpItem.GetAudioMapping()</code> and <code>timelineItem.GetSourceAudioChannelMapping()</code>
+Mapping format (json result) is similar for mpItem and timelineItem.</p>
+<p>This section will follow an example of an mpItem that has audio from its embedded source, and from two other clips that are linked to it.
+The audio clip attributes of this mpItem will show 3 tracks.</p>
+<p>Assume that (A) the embedded track is of format/type <code>stereo</code> (2 channels),
+            (B) linked clip 1 track is of format/type '7.1' (8 channels),
+            (C) linked clip 2 track is '5.1' (6 channels)
+and assume that the format/type was not changed further.</p>
+<p><code>mpItem.GetAudioMapping()</code> returns a string of the form:</p>
+<pre><code>{
+  "embedded_audio_channels": 2,                 # Total number of embedded channels across all tracks
+  "linked_audio": {                             # A list of only linked audio information
+    "1": {                                      # Same as (B) above
+      "channels": 8,
+      "offset": -100,                           # Audio at media offset 0 plays file_start + 100th sample
+      "path": FILE_PATH
+    },
+    "2": {                                      # Same as (C) above
+      "channels": 6,
+      "offset": 200,                            # Audio at media start plays 200 samples of digital black then file_start + 0th audio sample
+      "path": FILE_PATH
+    }
+  },
+  "track_mapping": {                            # Listing of all the tracks. Output here will match what is seen in the audio clip attributes menu on the UI.
+    "1": {
+      "channel_idx": [1, 3],                    # In this case, channel index '1' corresponds to first channel of (A), channel index '3' will correspond to the first channel of (B)
+      "mute": true,                             # Mute 'true' indicates track is muted. Valid value is true/false.
+      "type": "Stereo"                          # The length of the 'channel_idx' list will always correspond to the number of channels the format specified in 'type' will allow.
+                                                # In this case, 'Stereo' allows 2 channels and so the length of the 'channel_idx' list is 2.
+    },
+    "2": {
+      "channel_idx": [3, 4, 5, 6, 7, 8, 9, 10], # Channel indices here are following the default for (B)
+      "mute": true,
+      "type": "7.1"
+    },
+    "3": {
+      "channel_idx": [1, 1, 1, 1, 15, 16],      # The first four channels for this track correspond to the first channel of (A), and the final 2 follow the default for (C)
+      "mute": false,
+      "type": "5.1"
+    }
+  }
+}
+</code></pre>
+<h2 id="auto-caption-settings">Auto Caption Settings</h2>
+<p>This section covers the supported settings for the method Timeline.CreateSubtitlesFromAudio({autoCaptionSettings})</p>
+<p>The parameter setting is a dictionary containing the following keys:</p>
+<ul>
+<li><code>resolve.SUBTITLE_LANGUAGE</code>: languageID (see below), [<code>resolve.AUTO_CAPTION_AUTO</code> by default]</li>
+<li><code>resolve.SUBTITLE_CAPTION_PRESET</code>: presetType (see below), [<code>resolve.AUTO_CAPTION_SUBTITLE_DEFAULT</code> by default]</li>
+<li><code>resolve.SUBTITLE_CHARS_PER_LINE</code>: Number between 1 and 60 inclusive [42 by default]</li>
+<li><code>resolve.SUBTITLE_LINE_BREAK</code>: lineBreakType (see below), [<code>resolve.AUTO_CAPTION_LINE_SINGLE</code> by default]</li>
+<li><code>resolve.SUBTITLE_GAP</code>: Number between 0 and 10 inclusive [0 by default]</li>
+</ul>
+<p>Note that the default values for some keys may change based on values defined for other keys, as per the UI.
+For example, if the following dictionary is supplied,</p>
+<pre><code>{ resolve.SUBTITLE_LANGUAGE = resolve.AUTO_CAPTION_KOREAN,
+  resolve.SUBTITLE_CAPTION_PRESET = resolve.AUTO_CAPTION_NETFLIX }
+</code></pre>
+<p>the default value for <code>resolve.SUBTITLE_CHARS_PER_LINE</code> will be 16 instead of 42</p>
+<p>languageIDs:</p>
+<ul>
+<li><code>resolve.AUTO_CAPTION_AUTO</code></li>
+<li><code>resolve.AUTO_CAPTION_DANISH</code></li>
+<li><code>resolve.AUTO_CAPTION_DUTCH</code></li>
+<li><code>resolve.AUTO_CAPTION_ENGLISH</code></li>
+<li><code>resolve.AUTO_CAPTION_FRENCH</code></li>
+<li><code>resolve.AUTO_CAPTION_GERMAN</code></li>
+<li><code>resolve.AUTO_CAPTION_ITALIAN</code></li>
+<li><code>resolve.AUTO_CAPTION_JAPANESE</code></li>
+<li><code>resolve.AUTO_CAPTION_KOREAN</code></li>
+<li><code>resolve.AUTO_CAPTION_MANDARIN_SIMPLIFIED</code></li>
+<li><code>resolve.AUTO_CAPTION_MANDARIN_TRADITIONAL</code></li>
+<li><code>resolve.AUTO_CAPTION_NORWEGIAN</code></li>
+<li><code>resolve.AUTO_CAPTION_PORTUGUESE</code></li>
+<li><code>resolve.AUTO_CAPTION_RUSSIAN</code></li>
+<li><code>resolve.AUTO_CAPTION_SPANISH</code></li>
+<li><code>resolve.AUTO_CAPTION_SWEDISH</code></li>
+</ul>
+<p>presetTypes:</p>
+<ul>
+<li><code>resolve.AUTO_CAPTION_SUBTITLE_DEFAULT</code></li>
+<li><code>resolve.AUTO_CAPTION_TELETEXT</code></li>
+<li><code>resolve.AUTO_CAPTION_NETFLIX</code></li>
+</ul>
+<p>lineBreakTypes:</p>
+<ul>
+<li><code>resolve.AUTO_CAPTION_LINE_SINGLE</code></li>
+<li><code>resolve.AUTO_CAPTION_LINE_DOUBLE</code></li>
+</ul>
+<h2 id="looking-up-render-settings">Looking up Render Settings</h2>
+<p>This section covers the supported settings for the method SetRenderSettings({settings})</p>
+<p>The parameter setting is a dictionary containing the following keys:</p>
+<ul>
+<li><code>SelectAllFrames</code>: Bool (when set True, the settings MarkIn and MarkOut are ignored)</li>
+<li><code>MarkIn</code>: int</li>
+<li><code>MarkOut</code>: int</li>
+<li><code>TargetDir</code>: string</li>
+<li><code>CustomName</code>: string</li>
+<li><code>UniqueFilenameStyle</code>: 0 - Prefix, 1 - Suffix.</li>
+<li><code>ExportVideo</code>: Bool</li>
+<li><code>ExportAudio</code>: Bool</li>
+<li><code>FormatWidth</code>: int</li>
+<li><code>FormatHeight</code>: int</li>
+<li><code>FrameRate</code>: float (examples: 23.976, 24)</li>
+<li><code>PixelAspectRatio</code>: string (for SD resolution: <code>16_9</code> or <code>4_3</code>) (other resolutions: <code>square</code> or <code>cinemascope</code>)</li>
+<li>
+<p><code>VideoQuality</code> possible values for current codec (if applicable):</p>
+</li>
+<li>
+<p>0 (int) - will set quality to automatic</p>
+</li>
+<li>[1 -&gt; MAX] (int) - will set input bit rate</li>
+<li>[<code>Least</code>, <code>Low</code>, <code>Medium</code>, <code>High</code>, <code>Best</code>] (String) - will set input quality level</li>
+<li><code>AudioCodec</code>: string (example: <code>aac</code>)</li>
+<li><code>AudioBitDepth</code>: int</li>
+<li><code>AudioSampleRate</code>: int</li>
+<li><code>ColorSpaceTag</code> : string (example: "Same as Project", <code>AstroDesign</code>)</li>
+<li><code>GammaTag</code> : string (example: "Same as Project", <code>ACEScct</code>)</li>
+<li><code>ExportAlpha</code>: Bool</li>
+<li><code>EncodingProfile</code>: string (example: <code>Main10</code>). Can only be set for H.264 and H.265.</li>
+<li><code>MultiPassEncode</code>: Bool. Can only be set for H.264.</li>
+<li><code>AlphaMode</code>: 0 - Premultiplied, 1 - Straight. Can only be set if <code>ExportAlpha</code> is true.</li>
+<li><code>NetworkOptimization</code>: Bool. Only supported by QuickTime and MP4 formats.</li>
+<li><code>ClipStartFrame</code>: int</li>
+<li><code>TimelineStartTimecode</code>: string (example: "01:00:00:00")</li>
+<li><code>ReplaceExistingFilesInPlace</code>: Bool</li>
+</ul>
+<h2 id="looking-up-timeline-export-properties">Looking up timeline export properties</h2>
+<p>This section covers the parameters for the argument Export(fileName, exportType, exportSubtype).</p>
+<p>exportType can be one of the following constants:</p>
+<ul>
+<li><code>resolve.EXPORT_AAF</code></li>
+<li><code>resolve.EXPORT_DRT</code></li>
+<li><code>resolve.EXPORT_EDL</code></li>
+<li><code>resolve.EXPORT_FCP_7_XML</code></li>
+<li><code>resolve.EXPORT_FCPXML_1_8</code></li>
+<li><code>resolve.EXPORT_FCPXML_1_9</code></li>
+<li><code>resolve.EXPORT_FCPXML_1_10</code></li>
+<li><code>resolve.EXPORT_HDR_10_PROFILE_A</code></li>
+<li><code>resolve.EXPORT_HDR_10_PROFILE_B</code></li>
+<li><code>resolve.EXPORT_TEXT_CSV</code></li>
+<li><code>resolve.EXPORT_TEXT_TAB</code></li>
+<li><code>resolve.EXPORT_DOLBY_VISION_VER_2_9</code></li>
+<li><code>resolve.EXPORT_DOLBY_VISION_VER_4_0</code></li>
+<li><code>resolve.EXPORT_DOLBY_VISION_VER_5_1</code></li>
+<li><code>resolve.EXPORT_OTIO</code></li>
+<li><code>resolve.EXPORT_ALE</code></li>
+<li>
+<p><code>resolve.EXPORT_ALE_CDL</code>
+exportSubtype can be one of the following enums:</p>
+</li>
+<li>
+<p><code>resolve.EXPORT_NONE</code></p>
+</li>
+<li><code>resolve.EXPORT_AAF_NEW</code></li>
+<li><code>resolve.EXPORT_AAF_EXISTING</code></li>
+<li><code>resolve.EXPORT_CDL</code></li>
+<li><code>resolve.EXPORT_SDL</code></li>
+<li><code>resolve.EXPORT_MISSING_CLIPS</code></li>
+</ul>
+<p>Please note that exportSubType is a required parameter for <code>resolve.EXPORT_AAF</code> and <code>resolve.EXPORT_EDL</code>. For rest of the exportType, exportSubtype is ignored.</p>
+<p>When exportType is <code>resolve.EXPORT_AAF</code>, valid exportSubtype values are <code>resolve.EXPORT_AAF_NEW</code> and <code>resolve.EXPORT_AAF_EXISTING</code>.</p>
+<p>When exportType is <code>resolve.EXPORT_EDL</code>, valid exportSubtype values are <code>resolve.EXPORT_CDL</code>, <code>resolve.EXPORT_SDL</code>, <code>resolve.EXPORT_MISSING_CLIPS</code> and <code>resolve.EXPORT_NONE</code>.
+Note: Replace <code>resolve.</code> when using the constants above, if a different Resolve class instance name is used.</p>
+<h2 id="unsupported-exporttype-types">Unsupported exportType types</h2>
+<p>Starting with DaVinci Resolve 18.1, the following export types are not supported:</p>
+<pre><code>- `resolve.EXPORT_FCPXML_1_3`
+- `resolve.EXPORT_FCPXML_1_4`
+- `resolve.EXPORT_FCPXML_1_5`
+- `resolve.EXPORT_FCPXML_1_6`
+- `resolve.EXPORT_FCPXML_1_7`
+</code></pre>
+<h2 id="looking-up-timeline-item-properties">Looking up Timeline item properties</h2>
+<p>This section covers additional notes for the function "TimelineItem:SetProperty" and "TimelineItem:GetProperty". These functions are used to get and set properties mentioned.</p>
+<p>The supported keys with their accepted values are:</p>
+<ul>
+<li><code>Pan</code> : floating point values from -4.0<em>width to 4.0</em>width</li>
+<li><code>Tilt</code> : floating point values from -4.0<em>height to 4.0</em>height</li>
+<li><code>ZoomX</code> : floating point values from 0.0 to 100.0</li>
+<li><code>ZoomY</code> : floating point values from 0.0 to 100.0</li>
+<li><code>ZoomGang</code> : a boolean value</li>
+<li><code>RotationAngle</code> : floating point values from -360.0 to 360.0</li>
+<li><code>AnchorPointX</code> : floating point values from -4.0<em>width to 4.0</em>width</li>
+<li><code>AnchorPointY</code> : floating point values from -4.0<em>height to 4.0</em>height</li>
+<li><code>Pitch</code> : floating point values from -1.5 to 1.5</li>
+<li><code>Yaw</code> : floating point values from -1.5 to 1.5</li>
+<li><code>FlipX</code> : boolean value for flipping horizontally</li>
+<li><code>FlipY</code> : boolean value for flipping vertically</li>
+<li><code>CropLeft</code> : floating point values from 0.0 to width</li>
+<li><code>CropRight</code> : floating point values from 0.0 to width</li>
+<li><code>CropTop</code> : floating point values from 0.0 to height</li>
+<li><code>CropBottom</code> : floating point values from 0.0 to height</li>
+<li><code>CropSoftness</code> : floating point values from -100.0 to 100.0</li>
+<li><code>CropRetain</code> : boolean value for "Retain Image Position" checkbox</li>
+<li><code>DynamicZoomEase</code> : A value from the following constants<ul>
+<li>DYNAMIC_ZOOM_EASE_LINEAR = 0</li>
+<li>DYNAMIC_ZOOM_EASE_IN</li>
+<li>DYNAMIC_ZOOM_EASE_OUT</li>
+<li>DYNAMIC_ZOOM_EASE_IN_AND_OUT</li>
+</ul>
+</li>
+<li><code>CompositeMode</code> : A value from the following constants<ul>
+<li>COMPOSITE_NORMAL = 0</li>
+<li>COMPOSITE_ADD</li>
+<li>COMPOSITE_SUBTRACT</li>
+<li>COMPOSITE_DIFF</li>
+<li>COMPOSITE_MULTIPLY</li>
+<li>COMPOSITE_SCREEN</li>
+<li>COMPOSITE_OVERLAY</li>
+<li>COMPOSITE_HARDLIGHT</li>
+<li>COMPOSITE_SOFTLIGHT</li>
+<li>COMPOSITE_DARKEN</li>
+<li>COMPOSITE_LIGHTEN</li>
+<li>COMPOSITE_COLOR_DODGE</li>
+<li>COMPOSITE_COLOR_BURN</li>
+<li>COMPOSITE_EXCLUSION</li>
+<li>COMPOSITE_HUE</li>
+<li>COMPOSITE_SATURATE</li>
+<li>COMPOSITE_COLORIZE</li>
+<li>COMPOSITE_LUMA_MASK</li>
+<li>COMPOSITE_DIVIDE</li>
+<li>COMPOSITE_LINEAR_DODGE</li>
+<li>COMPOSITE_LINEAR_BURN</li>
+<li>COMPOSITE_LINEAR_LIGHT</li>
+<li>COMPOSITE_VIVID_LIGHT</li>
+<li>COMPOSITE_PIN_LIGHT</li>
+<li>COMPOSITE_HARD_MIX</li>
+<li>COMPOSITE_LIGHTER_COLOR</li>
+<li>COMPOSITE_DARKER_COLOR</li>
+<li>COMPOSITE_FOREGROUND</li>
+<li>COMPOSITE_ALPHA</li>
+<li>COMPOSITE_INVERTED_ALPHA</li>
+<li>COMPOSITE_LUM</li>
+<li>COMPOSITE_INVERTED_LUM</li>
+</ul>
+</li>
+<li><code>Opacity</code> : floating point value from 0.0 to 100.0</li>
+<li><code>Distortion</code> : floating point value from -1.0 to 1.0</li>
+<li><code>RetimeProcess</code> : A value from the following constants<ul>
+<li>RETIME_USE_PROJECT = 0</li>
+<li>RETIME_NEAREST</li>
+<li>RETIME_FRAME_BLEND</li>
+<li>RETIME_OPTICAL_FLOW</li>
+</ul>
+</li>
+<li><code>MotionEstimation</code> : A value from the following constants<ul>
+<li>MOTION_EST_USE_PROJECT = 0</li>
+<li>MOTION_EST_STANDARD_FASTER</li>
+<li>MOTION_EST_STANDARD_BETTER</li>
+<li>MOTION_EST_ENHANCED_FASTER</li>
+<li>MOTION_EST_ENHANCED_BETTER</li>
+<li>MOTION_EST_SPEED_WARP_BETTER</li>
+<li>MOTION_EST_SPEED_WARP_FASTER</li>
+</ul>
+</li>
+<li><code>Scaling</code> : A value from the following constants<ul>
+<li>SCALE_USE_PROJECT = 0</li>
+<li>SCALE_CROP</li>
+<li>SCALE_FIT</li>
+<li>SCALE_FILL</li>
+<li>SCALE_STRETCH</li>
+</ul>
+</li>
+<li><code>ResizeFilter</code> : A value from the following constants<ul>
+<li>RESIZE_FILTER_USE_PROJECT = 0</li>
+<li>RESIZE_FILTER_SHARPER</li>
+<li>RESIZE_FILTER_SMOOTHER</li>
+<li>RESIZE_FILTER_BICUBIC</li>
+<li>RESIZE_FILTER_BILINEAR</li>
+<li>RESIZE_FILTER_BESSEL</li>
+<li>RESIZE_FILTER_BOX</li>
+<li>RESIZE_FILTER_CATMULL_ROM</li>
+<li>RESIZE_FILTER_CUBIC</li>
+<li>RESIZE_FILTER_GAUSSIAN</li>
+<li>RESIZE_FILTER_LANCZOS</li>
+<li>RESIZE_FILTER_MITCHELL</li>
+<li>RESIZE_FILTER_NEAREST_NEIGHBOR</li>
+<li>RESIZE_FILTER_QUADRATIC</li>
+<li>RESIZE_FILTER_SINC</li>
+<li>RESIZE_FILTER_LINEAR
+Values beyond the range will be clipped
+width and height are same as the UI max limits</li>
+</ul>
+</li>
+</ul>
+<p>The arguments can be passed as a key and value pair or they can be grouped together into a dictionary (for python) or table (for lua) and passed
+as a single argument.</p>
+<p>Getting the values for the keys that uses constants will return the number which is in the constant</p>
+<h2 id="exportlut-notes">ExportLUT notes</h2>
+<p>The following section covers additional notes for TimelineItem.ExportLUT(exportType, path).</p>
+<p>Supported values for <code>exportType</code> (enum) are:</p>
+<pre><code>- `resolve.EXPORT_LUT_17PTCUBE`
+- `resolve.EXPORT_LUT_33PTCUBE`
+- `resolve.EXPORT_LUT_65PTCUBE`
+- `resolve.EXPORT_LUT_PANASONICVLUT`
+</code></pre>
+<h2 id="deprecated-resolve-api-functions">Deprecated Resolve API Functions</h2>
+<p>The following API functions are deprecated.</p>
+<h3 id="projectmanager">ProjectManager</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetProjectsInCurrentFolder()</code></td>
+<td>{project names...}</td>
+<td>Returns a dict of project names in current folder.</td>
+</tr>
+<tr>
+<td><code>GetFoldersInCurrentFolder()</code></td>
+<td>{folder names...}</td>
+<td>Returns a dict of folder names in current folder.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="project">Project</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetPresets()</code></td>
+<td>{presets...}</td>
+<td>Returns a dict of presets and their information.</td>
+</tr>
+<tr>
+<td><code>GetRenderJobs()</code></td>
+<td>{render jobs...}</td>
+<td>Returns a dict of render jobs and their information.</td>
+</tr>
+<tr>
+<td><code>GetRenderPresets()</code></td>
+<td>{presets...}</td>
+<td>Returns a dict of render presets and their information.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mediastorage">MediaStorage</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetMountedVolumes()</code></td>
+<td>{paths...}</td>
+<td>Returns a dict of folder paths corresponding to mounted volumes displayed in Resolve’s Media Storage.</td>
+</tr>
+<tr>
+<td><code>GetSubFolders(folderPath)</code></td>
+<td>{paths...}</td>
+<td>Returns a dict of folder paths in the given absolute folder path.</td>
+</tr>
+<tr>
+<td><code>GetFiles(folderPath)</code></td>
+<td>{paths...}</td>
+<td>Returns a dict of media and file listings in the given absolute folder path. Note that media listings may be logically consolidated entries.</td>
+</tr>
+<tr>
+<td><code>AddItemsToMediaPool(item1, item2, ...)</code></td>
+<td>{clips...}</td>
+<td>Adds specified file/folder paths from Media Storage into current Media Pool folder. Input is one or more file/folder paths. Returns a dict of the MediaPoolItems created.</td>
+</tr>
+<tr>
+<td><code>AddItemsToMediaPool([items...])</code></td>
+<td>{clips...}</td>
+<td>Adds specified file/folder paths from Media Storage into current Media Pool folder. Input is an array of file/folder paths. Returns a dict of the MediaPoolItems created.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="folder">Folder</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetClips()</code></td>
+<td>{clips...}</td>
+<td>Returns a dict of clips (items) within the folder.</td>
+</tr>
+<tr>
+<td><code>GetSubFolders()</code></td>
+<td>{folders...}</td>
+<td>Returns a dict of subfolders in the folder.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mediapoolitem">MediaPoolItem</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetFlags()</code></td>
+<td>{colors...}</td>
+<td>Returns a dict of flag colors assigned to the item.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="timeline">Timeline</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetItemsInTrack(trackType, index)</code></td>
+<td>{items...}</td>
+<td>Returns a dict of Timeline items on the video or audio track (based on trackType) at specified</td>
+</tr>
+</tbody>
+</table>
+<h3 id="timelineitem">TimelineItem</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GetFusionCompNames()</code></td>
+<td>{names...}</td>
+<td>Returns a dict of Fusion composition names associated with the timeline item.</td>
+</tr>
+<tr>
+<td><code>GetFlags()</code></td>
+<td>{colors...}</td>
+<td>Returns a dict of flag colors assigned to the item.</td>
+</tr>
+<tr>
+<td><code>GetVersionNames(versionType)</code></td>
+<td>{names...}</td>
+<td>Returns a dict of version names by provided versionType: 0 - local, 1 - remote.</td>
+</tr>
+<tr>
+<td><code>GetNumNodes()</code></td>
+<td>int</td>
+<td>Returns the number of nodes in the current graph for the timeline item</td>
+</tr>
+<tr>
+<td><code>SetLUT(nodeIndex, lutPath)</code></td>
+<td>Bool</td>
+<td>Sets LUT on the node mapping the node index provided, 1 &lt;= nodeIndex &lt;= total number of nodes.<br>The lutPath can be an absolute path, or a relative path (based off custom LUT paths or the master LUT path).<br>The operation is successful for valid lut paths that Resolve has already discovered (see Project.RefreshLUTList).</td>
+</tr>
+<tr>
+<td><code>GetLUT(nodeIndex)</code></td>
+<td>String</td>
+<td>Gets relative LUT path based on the node index provided, 1 &lt;= nodeIndex &lt;= total number of nodes.</td>
+</tr>
+<tr>
+<td><code>GetNodeLabel(nodeIndex)</code></td>
+<td>string</td>
+<td>Returns the label of the node at nodeIndex.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="unsupported-resolve-api-functions">Unsupported Resolve API Functions</h2>
+<p>The following API (functions and parameters) are no longer supported. Use job IDs instead of indices.</p>
+<h3 id="project">Project</h3>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Return</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>StartRendering(index1, index2, ...)</code></td>
+<td>Bool</td>
+<td>Please use unique job ids (string) instead of indices.</td>
+</tr>
+<tr>
+<td><code>StartRendering([idxs...])</code></td>
+<td>Bool</td>
+<td>Please use unique job ids (string) instead of indices.</td>
+</tr>
+<tr>
+<td><code>DeleteRenderJobByIndex(idx)</code></td>
+<td>Bool</td>
+<td>Please use unique job ids (string) instead of indices.</td>
+</tr>
+<tr>
+<td><code>GetRenderJobStatus(idx) GetSetting and SetSetting</code></td>
+<td>{status info}{}</td>
+<td>Please use unique job ids (string) instead of indices.<br>settingName videoMonitorUseRec601For422SDI is now replaced with videoMonitorUseMatrixOverrideFor422SDI and videoMonitorMatrixOverrideFor422SDI.<br>settingName perfProxyMediaOn is now replaced with perfProxyMediaMode which takes values 0 - disabled, 1 - when available, 2 - when source not available.</td>
+</tr>
+</tbody>
+</table>
+  </main>
+
+  <!-- External Script -->
+  <!--<script src="js/scripts.js"></script>-->
+
+<!-- Start of StatCounter Code for Default Guide -->
+<script type="text/javascript">
+	var sc_project=9802855;
+	var sc_invisible=1;
+	var sc_security="5165ddac";
+</script>
+<script type="text/javascript" async src="https://statcounter.com/counter/counter.js"></script>
+<noscript>
+	<div class="statcounter">
+		<a title="shopify analytics ecommerce tracking" href="https://statcounter.com/shopify/" target="_blank">
+			<img class="statcounter" src="https://c.statcounter.com/9802855/0/5165ddac/1/" alt="shopify analytics ecommerce tracking">
+		</a>
+	</div>
+</noscript>
+<!-- End of StatCounter Code for Default Guide -->
+
+</body>
+</html>
